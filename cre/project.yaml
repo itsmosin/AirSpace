@@ -23,3 +23,9 @@ production-settings:
   rpcs:
     - chain-name: solana-devnet
       url: https://api.devnet.solana.com
+
+# ==========================================================================
+hosted-settings:
+  rpcs:
+    - chain-name: solana-devnet
+      url: https://api.devnet.solana.com

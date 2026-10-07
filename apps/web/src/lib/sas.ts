@@ -28,6 +28,8 @@ export class SasUnavailableError extends Error {
 
 export function loadSasConfig(): SasConfig | null {
   try {
+    const inline = process.env.SAS_CONFIG_JSON;
+    if (inline && inline.trim()) return JSON.parse(inline) as SasConfig;
     return loadSasConfigFile(SERVER_ENV.sasConfigPath);
   } catch {
     return null;

@@ -3,7 +3,8 @@ import { PublicKey } from "@solana/web3.js";
 import { fail, json, errorMessage } from "@/lib/server/http";
 import { registrarProgram } from "@/lib/server/registrar";
 import { openVerdictIx } from "@/lib/airspace/instructions";
-import { createJob, latestJobForBbl } from "@/lib/jobs";
+import { appendLog, createJob, latestJobForBbl } from "@/lib/jobs";
+import { SERVER_ENV } from "@/lib/server/env";
 import { runCreVerification } from "@/lib/server/cre";
 import { invalidateParcels } from "@/lib/server/parcels";
 
@@ -51,7 +52,16 @@ export async function POST(req: Request) {
   }
 
   const job = createJob({ bbl, wallet, openVerdictTx });
+  if (SERVER_ENV.hosted) {
+    // Hosted mode: the Chainlink CRE cron handler polls /api/verify/pending and writes the verdict on-chain.
+    const ts = new Date().toISOString();
+    appendLog(job.id, `[${ts}] airspace: verdict account opened on devnet (${openVerdictTx})`);
+    appendLog(job.id, `[${ts}] airspace: queued for the Chainlink CRE verifier sweep (polls every 60 s)`);
+    appendLog(job.id, `[${ts}] airspace: the workflow fetches the NYC PLUTO record, audits it inside a TEE, and signs a VerdictReport`);
+    appendLog(job.id, `[${ts}] airspace: this page refreshes automatically when the verdict lands`);
+    return json({ jobId: job.id, bbl, status: "queued", openVerdictTx, mode: "queue" });
+  }
   // Fire and forget; progress is tracked in .data/jobs.json and .data/logs/<jobId>.log
   runCreVerification(job.id, { bbl, submitted });
-  return json({ jobId: job.id, bbl, status: "queued", openVerdictTx });
+  return json({ jobId: job.id, bbl, status: "queued", openVerdictTx, mode: "local" });
 }

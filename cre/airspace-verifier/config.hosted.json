@@ -1,0 +1,15 @@
+{
+  "webBaseUrl": "https://airspace-nyc.vercel.app",
+  "llmUrl": "https://api.anthropic.com/v1/messages",
+  "llmModel": "claude-sonnet-5",
+  "llmSecretId": "ANTHROPIC_API_KEY",
+  "plutoUrl": "https://data.cityofnewyork.us/resource/64uk-42ks.json",
+  "pendingSchedule": "0 */5 * * * *",
+  "maxPendingPerRun": 2,
+  "solana": {
+    "chainSelectorName": "solana-devnet",
+    "programId": "5PNnqSxWCktbS7pUtt5MXCuQEVfztjYuLpvVvbB3oxeZ",
+    "forwarderProgramId": "7kuEAA3mSC1Tz8gQjnvH7bKFda9xSPRRin9SZbH49cNK",
+    "forwarderState": "5Tipz3yhTBdVsDbaBxZkrp7Gjf3brGq5SKkxReefPMP7"
+  }
+}

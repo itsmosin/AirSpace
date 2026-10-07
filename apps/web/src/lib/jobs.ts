@@ -30,10 +30,14 @@ function readStore(): Store {
 }
 
 function writeStore(store: Store) {
-  const p = ensureDirs();
-  const tmp = `${p.file}.${process.pid}.tmp`;
-  fs.writeFileSync(tmp, JSON.stringify(store, null, 2));
-  fs.renameSync(tmp, p.file);
+  try {
+    const p = ensureDirs();
+    const tmp = `${p.file}.${process.pid}.tmp`;
+    fs.writeFileSync(tmp, JSON.stringify(store, null, 2));
+    fs.renameSync(tmp, p.file);
+  } catch {
+    // Read-only or ephemeral filesystem (serverless): jobs are best-effort; the chain is the source of truth.
+  }
 }
 
 export function newJobId() {
@@ -87,7 +91,12 @@ export function payloadPath(jobId: string) {
 }
 
 export function appendLog(jobId: string, line: string) {
-  fs.appendFileSync(logPath(jobId), line.endsWith("\n") ? line : line + "\n");
+  try {
+    ensureDirs();
+    fs.appendFileSync(logPath(jobId), line.endsWith("\n") ? line : line + "\n");
+  } catch {
+    // best-effort on serverless filesystems
+  }
 }
 
 export function readLogTail(jobId: string, maxLines = 160): string {

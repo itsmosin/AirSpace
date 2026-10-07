@@ -30,6 +30,8 @@ export function loadKeypair(filePath: string): Keypair {
 
 export function loadRegistrar(): Keypair | null {
   try {
+    const inline = process.env.REGISTRAR_KEYPAIR_JSON;
+    if (inline && inline.trim()) return Keypair.fromSecretKey(Uint8Array.from(JSON.parse(inline) as number[]));
     return loadKeypair(SERVER_ENV.registrarKeypairPath);
   } catch {
     return null;

@@ -25,6 +25,10 @@ export const SERVER_ENV = {
     return process.env.CRE_BIN || path.join(process.env.HOME || "", ".cre", "bin", "cre");
   },
   get dataDir() {
-    return path.resolve(cwd(), ".data");
+    return process.env.VERCEL ? "/tmp/airspace-data" : path.resolve(cwd(), ".data");
+  },
+  /** Hosted mode: verification requests are queued on-chain and picked up by the CRE cron sweep running elsewhere. */
+  get hosted() {
+    return process.env.VERIFIER_MODE === "queue" || (!!process.env.VERCEL && process.env.VERIFIER_MODE !== "local");
   },
 };
