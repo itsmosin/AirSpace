@@ -1,0 +1,21 @@
+{
+  "name": "@airspace/cre-verifier",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "main.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "simulate:http": "cd .. && cre workflow simulate ./airspace-verifier --target staging-settings --non-interactive --trigger-index 0 --http-payload @./payloads/esb.json",
+    "simulate:cron": "cd .. && cre workflow simulate ./airspace-verifier --target staging-settings --non-interactive --trigger-index 1"
+  },
+  "dependencies": {
+    "@chainlink/cre-sdk": "1.18.0",
+    "@solana/codecs": "6.10.0",
+    "@solana/web3.js": "1.98.4",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

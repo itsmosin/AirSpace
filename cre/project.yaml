@@ -1,0 +1,25 @@
+# ==========================================================================
+# CRE PROJECT SETTINGS FILE — AirSpace verifier
+# ==========================================================================
+# Each target defines the RPC endpoints the simulator / DON may use.
+# `cre workflow simulate` always goes through the CRE simulator's mock
+# keystone forwarder on Solana devnet; a real DON deployment goes through
+# Chainlink's production devnet forwarder (see README).
+
+# ==========================================================================
+simulation-settings:
+  rpcs:
+    - chain-name: solana-devnet
+      url: https://api.devnet.solana.com
+
+# ==========================================================================
+staging-settings:
+  rpcs:
+    - chain-name: solana-devnet
+      url: https://api.devnet.solana.com
+
+# ==========================================================================
+production-settings:
+  rpcs:
+    - chain-name: solana-devnet
+      url: https://api.devnet.solana.com

@@ -1,0 +1,15 @@
+{
+  "webBaseUrl": "http://localhost:3000",
+  "llmUrl": "https://api.anthropic.com/v1/messages",
+  "llmModel": "claude-sonnet-5",
+  "llmSecretId": "ANTHROPIC_API_KEY",
+  "plutoUrl": "https://data.cityofnewyork.us/resource/64uk-42ks.json",
+  "pendingSchedule": "0 */5 * * * *",
+  "maxPendingPerRun": 2,
+  "solana": {
+    "chainSelectorName": "solana-devnet",
+    "programId": "5PNnqSxWCktbS7pUtt5MXCuQEVfztjYuLpvVvbB3oxeZ",
+    "forwarderProgramId": "CXsKEJcs25TQEYU2e5jZ8QTPE3ffMLZhH6BWHrdcCCB5",
+    "forwarderState": "8QoomCQyPSkJ8WopJbX9B4HyvrFzziwvJdU8hZE6DCr9"
+  }
+}
