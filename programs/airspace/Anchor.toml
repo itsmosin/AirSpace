@@ -26,6 +26,7 @@ startup_wait = 30000
 # receiver program and the sponsored SOL/USD price update account from devnet.
 [test.validator]
 url = "https://api.devnet.solana.com"
+bind_address = "127.0.0.1"
 
 [[test.validator.clone]]
 address = "CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d"
