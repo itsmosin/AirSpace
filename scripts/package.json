@@ -1,0 +1,24 @@
+{
+  "name": "@airspace/scripts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup-sas": "bun setup-sas.ts",
+    "verify-sas": "bun verify-sas.ts",
+    "set-attestation-config": "bun set-attestation-config.ts",
+    "manual-verdict": "bun manual-verdict.ts",
+    "seed-devnet": "bun seed-devnet.ts",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@airspace/sas": "workspace:*",
+    "@airspace/shared": "workspace:*",
+    "@coral-xyz/anchor": "^0.32.1",
+    "@solana/web3.js": "^1.98.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^5"
+  }
+}
