@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { MIDTOWN, squareAround, volumeHeights } from "@/lib/geo";
+import { MapPlaceholder } from "./MapPlaceholder";
 import { formatCompactUsd, formatNumber } from "@/lib/utils";
 import type { FeatureCollection } from "geojson";
 import type { MapParcel, MapView } from "./types";
@@ -76,13 +77,20 @@ export default function AirMap({ token, parcels, selected, onSelect, interactive
   parcelsRef.current = parcels;
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  const [glError, setGlError] = useState<string | null>(null);
 
   // init
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
     mapboxgl.accessToken = token;
     const v = { ...DEFAULT_VIEW, ...view };
-    const map = new mapboxgl.Map({
+    if (!mapboxgl.supported?.()) {
+      setGlError("This browser cannot render WebGL maps.");
+      return;
+    }
+    let map: mapboxgl.Map;
+    try {
+      map = new mapboxgl.Map({
       container: containerRef.current,
       style: "mapbox://styles/mapbox/dark-v11",
       center: [v.lng, v.lat],
@@ -93,7 +101,11 @@ export default function AirMap({ token, parcels, selected, onSelect, interactive
       interactive,
       attributionControl: false,
       cooperativeGestures: false,
-    });
+      });
+    } catch (e) {
+      setGlError(e instanceof Error ? e.message : "Failed to initialize WebGL");
+      return;
+    }
     mapRef.current = map;
     if (interactive) map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true, showCompass: true }), "bottom-right");
     map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-left");
@@ -235,5 +247,6 @@ export default function AirMap({ token, parcels, selected, onSelect, interactive
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
+  if (glError) return <MapPlaceholder className={className} compact />;
   return <div ref={containerRef} className={className ?? "h-full w-full"} />;
 }
