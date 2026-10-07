@@ -12,9 +12,10 @@ import { FlagChips } from "@/components/parcel/FlagChips";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { FarBar } from "@/components/ui/FarBar";
-import { Input, Label } from "@/components/ui/Input";
+import { Input, Label, Segmented } from "@/components/ui/Input";
 import { Mono } from "@/components/ui/Mono";
-import { Eyebrow, Panel } from "@/components/ui/Panel";
+import { Note, Panel } from "@/components/ui/Panel";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { Stat } from "@/components/ui/Stat";
 import { Steps } from "@/components/ui/Steps";
@@ -72,9 +73,9 @@ export function ListWizard() {
 
   if (!hydrated) {
     return (
-      <div className="mx-auto max-w-3xl px-4 pt-28 sm:px-6">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="mt-6 h-64 w-full rounded-3xl" />
+      <div className="mx-auto max-w-3xl px-4 pt-20 sm:px-6">
+        <Skeleton className="mx-auto h-12 w-80" />
+        <Skeleton className="mt-10 h-64 w-full rounded-3xl" />
       </div>
     );
   }
@@ -82,25 +83,21 @@ export function ListWizard() {
   const done = state.step >= STEPS.length;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 pt-24 pb-20 sm:px-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <Eyebrow>List air rights</Eyebrow>
-          <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Turn unused floor area into a tradable asset.</h1>
-        </div>
+    <div className="mx-auto max-w-3xl px-4 pb-12 sm:px-6">
+      <SectionHeader title="Turn unused floor area into a tradable asset." description="Six steps: connect, verify your identity, find the building, run the Chainlink CRE audit, mint on Solana and set a price.">
         {state.step > 0 ? (
-          <Button variant="ghost" size="sm" icon={<RotateCcw className="size-3.5" />} onClick={reset}>Start over</Button>
+          <Button variant="secondary" size="sm" icon={<RotateCcw className="size-3.5" />} onClick={reset}>Start over</Button>
         ) : null}
-      </div>
+      </SectionHeader>
 
-      <div className="mt-8">
+      <div className="flex justify-center">
         <Steps steps={STEPS} current={Math.min(state.step, STEPS.length)} onSelect={(i) => (!state.mint || i >= 4) && goto(i)} />
       </div>
 
       {!registry && parcelsData ? (
-        <p className="mt-4 rounded-xl border border-amber/25 bg-amber/5 px-4 py-3 text-xs text-amber">
+        <Note tone="orange" className="mt-4">
           The AirSpace registry is not initialized on this cluster yet. Minting and listing will fail until the program is set up.
-        </p>
+        </Note>
       ) : null}
 
       <AnimatePresence mode="wait">
@@ -130,10 +127,10 @@ function StepCard({ title, subtitle, children, icon }: { title: string; subtitle
   return (
     <Panel className="p-6 sm:p-8">
       <div className="flex items-start gap-4">
-        {icon ? <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-cyan">{icon}</div> : null}
+        {icon ? <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-fill text-fg">{icon}</div> : null}
         <div>
-          <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
-          {subtitle ? <p className="mt-1 text-sm leading-relaxed text-fg-muted">{subtitle}</p> : null}
+          <h2 className="display text-[24px] font-semibold text-fg">{title}</h2>
+          {subtitle ? <p className="mt-1 text-[14px] leading-relaxed text-fg-muted">{subtitle}</p> : null}
         </div>
       </div>
       <div className="mt-6">{children}</div>
@@ -181,9 +178,9 @@ function IdentityStep({ registry, state, patch }: { registry: RegistryView | nul
       {has ? (
         <AttestationBadge label="KYC attestation" pda={state.kyc?.attestation ?? kyc.pda?.toBase58() ?? ""} tx={state.kyc?.txSignature} />
       ) : (
-        <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-fg-muted">
+        <Note>
           No KYC attestation found for <span className="font-mono text-fg">{publicKey?.toBase58().slice(0, 8)}…</span>. In this demo the registrar issues it instantly; a production flow would run a real identity check first.
-        </div>
+        </Note>
       )}
       <div className="mt-6 flex flex-wrap gap-3">
         {!has ? <Button loading={busy} onClick={verify} icon={<BadgeCheck className="size-4" />}>Verify identity</Button> : null}
@@ -197,17 +194,17 @@ function IdentityStep({ registry, state, patch }: { registry: RegistryView | nul
 
 function AttestationBadge({ label, pda, tx }: { label: string; pda: string; tx?: string }) {
   return (
-    <div className="flex flex-col gap-2 rounded-xl border border-emerald/25 bg-emerald/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-2 rounded-2xl bg-green/10 p-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3">
-        <span className="flex size-8 items-center justify-center rounded-full bg-emerald/15 text-emerald"><Check className="size-4" /></span>
+        <span className="flex size-8 items-center justify-center rounded-full bg-green text-[#0b1a10]"><Check className="size-4" strokeWidth={3} /></span>
         <div>
-          <p className="text-sm font-medium text-fg">{label} present</p>
-          <p className="text-xs text-fg-muted">Issued by the AirSpace registrar · valid 365 days</p>
+          <p className="text-[14px] font-medium text-fg">{label} present</p>
+          <p className="text-[13px] text-fg-muted">Issued by the AirSpace registrar · valid 365 days</p>
         </div>
       </div>
-      <div className="flex flex-col items-start gap-1 text-xs sm:items-end">
+      <div className="flex flex-col items-start gap-1 text-[13px] sm:items-end">
         {pda ? <Mono value={pda} href={explorerAddress(pda)} /> : null}
-        {tx ? <a href={explorerTx(tx)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-cyan hover:underline">issuance tx <ExternalLink className="size-3" /></a> : null}
+        {tx ? <a href={explorerTx(tx)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-medium text-blue-ink hover:underline">issuance tx <ExternalLink className="size-3" /></a> : null}
       </div>
     </div>
   );
@@ -255,13 +252,7 @@ function BuildingStep({ state, patch }: { state: WizardState; patch: (p: Partial
 
   return (
     <StepCard icon={<Building2 className="size-5" />} title="Find your building" subtitle="We pull the lot's PLUTO record from NYC Open Data and compute the unused floor area from zoning.">
-      <div className="flex gap-1 rounded-full border border-white/10 p-1 text-xs">
-        {(["address", "bbl"] as const).map((m) => (
-          <button key={m} type="button" onClick={() => setMode(m)} className={cn("flex-1 rounded-full px-3 py-1.5 transition-colors", mode === m ? "bg-white/10 text-fg" : "text-fg-muted hover:text-fg")}>
-            {m === "address" ? "Street address" : "BBL"}
-          </button>
-        ))}
-      </div>
+      <Segmented label="Lookup mode" value={mode} onChange={setMode} options={[{ value: "address", label: "Street address" }, { value: "bbl", label: "BBL" }]} className="w-fit" />
       <form
         className="mt-3 flex gap-2"
         onSubmit={(e) => {
@@ -270,23 +261,23 @@ function BuildingStep({ state, patch }: { state: WizardState; patch: (p: Partial
         }}
       >
         <div className="relative flex-1">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-fg-faint" />
-          <Input value={query} onChange={(e) => setQuery(e.target.value)} mono={mode === "bbl"} placeholder={mode === "bbl" ? "1008350041" : "350 Fifth Avenue, New York"} className="pl-10" />
+          <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-fg-faint" />
+          <Input pill value={query} onChange={(e) => setQuery(e.target.value)} mono={mode === "bbl"} placeholder={mode === "bbl" ? "1008350041" : "350 Fifth Avenue, New York"} className="pl-11" />
         </div>
         <Button type="submit" loading={searching} variant="secondary">Look up</Button>
       </form>
-      {searchError ? <p className="mt-2 text-xs text-rose">{searchError}</p> : null}
-      <p className="mt-2 text-[11px] text-fg-faint">Try BBL 1008350041 (Empire State Building) or 1012970029 (Chrysler Building).</p>
+      {searchError ? <p className="mt-2 text-[13px] text-red-ink">{searchError}</p> : null}
+      <p className="mt-2 text-[12px] text-fg-faint">Try BBL 1008350041 (Empire State Building) or 1012970029 (Chrysler Building).</p>
 
       {lot ? (
-        <div className="mt-6 grid gap-4 md:grid-cols-[1fr_220px]">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+        <div className="mt-6 grid gap-4 md:grid-cols-[1fr_240px]">
+          <div className="rounded-2xl bg-fill-2 p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-lg font-semibold tracking-tight">{lot.address}</p>
-                <p className="text-xs text-fg-muted">{BOROUGH_NAME[lot.borough]} · {lot.zoning || "—"} · <span className="font-mono">BBL {lot.bbl}</span></p>
+                <p className="text-[18px] font-semibold tracking-[-0.01em] text-fg">{lot.address}</p>
+                <p className="text-[13px] text-fg-muted">{BOROUGH_NAME[lot.borough]} · {lot.zoning || "—"} · <span className="font-mono text-[12px]">BBL {lot.bbl}</span></p>
               </div>
-              <Badge tone={lot.unusedSqft > 0 ? "cyan" : "rose"}>{lot.unusedSqft > 0 ? "Has unused FAR" : "No unused FAR"}</Badge>
+              <Badge tone={lot.unusedSqft > 0 ? "green" : "red"}>{lot.unusedSqft > 0 ? "Has unused FAR" : "No unused FAR"}</Badge>
             </div>
             <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
               <Stat label="Unused" value={formatNumber(lot.unusedSqft)} hint="sq ft" size="sm" />
@@ -295,10 +286,10 @@ function BuildingStep({ state, patch }: { state: WizardState; patch: (p: Partial
               <Stat label="Built" value={formatNumber(lot.builtAreaSqft)} hint={`${lot.numFloors} floors`} size="sm" />
             </div>
             <FarBar className="mt-5" used={lot.lotAreaSqft ? lot.builtAreaSqft / lot.lotAreaSqft : 0} allowed={lot.maxFar} />
-            <p className="mt-4 text-xs text-fg-muted">Owner of record: <span className="text-fg">{lot.ownerName ? titleCase(lot.ownerName) : "—"}</span>{lot.landmark ? <span className="text-amber"> · landmark</span> : null}{lot.historicDistrict ? <span className="text-amber"> · historic district</span> : null}</p>
+            <p className="mt-4 text-[13px] text-fg-muted">Owner of record: <span className="text-fg">{lot.ownerName ? titleCase(lot.ownerName) : "—"}</span>{lot.landmark ? <span className="text-orange-ink"> · landmark</span> : null}{lot.historicDistrict ? <span className="text-orange-ink"> · historic district</span> : null}</p>
           </div>
-          <div className="relative min-h-[200px] overflow-hidden rounded-2xl border border-white/10">
-            <AirMapLazy parcels={mapParcels} selected={lot.bbl} interactive={false} showPopups={false} placeholderCompact view={{ lng: lot.lng, lat: lot.lat, zoom: 16.3 }} />
+          <div className="relative min-h-[220px] overflow-hidden rounded-2xl border border-line">
+            <AirMapLazy parcels={mapParcels} mini showPopups={false} placeholderCompact view={{ lng: lot.lng, lat: lot.lat, zoom: 17, pitch: 65, bearing: 20 }} />
           </div>
         </div>
       ) : null}
@@ -312,7 +303,7 @@ function BuildingStep({ state, patch }: { state: WizardState; patch: (p: Partial
               This is my building
             </Button>
             {state.ownerAttestation ? <Button variant="secondary" onClick={() => patch({ step: 3, ownerName })} iconRight={<ArrowRight className="size-4" />}>Continue</Button> : null}
-            <span className="text-xs text-fg-faint">Issues an owner attestation (mock title check) to your wallet.</span>
+            <span className="text-[13px] text-fg-faint">Issues an owner attestation (mock title check) to your wallet.</span>
           </div>
         </div>
       ) : null}
@@ -355,13 +346,13 @@ function VerifyStep({ state, patch }: { state: WizardState; patch: (p: Partial<W
     <StepCard icon={<Sparkles className="size-5" />} title="Request verification" subtitle="A Chainlink CRE workflow fetches the PLUTO record, audits it confidentially with an LLM, hashes the report and writes the verdict to the AirSpace program through the keystone forwarder.">
       <div className="flex flex-wrap items-center gap-3">
         <Badge tone={pres.tone} dot={pres.dot || running}>{running ? (job?.status === "running" ? "CRE running" : "Queued") : pres.label}</Badge>
-        {state.ownerAttestation ? <span className="text-xs text-fg-muted">owner attestation <Mono value={state.ownerAttestation.attestation} href={explorerAddress(state.ownerAttestation.attestation)} className="text-xs" /></span> : null}
+        {state.ownerAttestation ? <span className="text-[13px] text-fg-muted">owner attestation <Mono value={state.ownerAttestation.attestation} href={explorerAddress(state.ownerAttestation.attestation)} className="text-[12px]" /></span> : null}
       </div>
 
       {!state.verify && !fresh ? (
         <div className="mt-6">
           <Button loading={busy} onClick={request} icon={<Sparkles className="size-4" />}>Run Chainlink CRE verification</Button>
-          <p className="mt-2 text-xs text-fg-faint">The registrar pays to open the verdict account; the CRE simulation broadcasts the report to devnet. Usually 1-3 minutes.</p>
+          <p className="mt-2 text-[13px] text-fg-faint">The registrar pays to open the verdict account; the CRE simulation broadcasts the report to devnet. Usually 1-3 minutes.</p>
         </div>
       ) : null}
 
@@ -380,15 +371,15 @@ function VerifyStep({ state, patch }: { state: WizardState; patch: (p: Partial<W
                 : "")
             }
             live={running}
-            title={`cre workflow simulate · ${lot.bbl}${job ? ` · ${job.status}` : running ? " · queued" : ""}`}
+            meta={`cre workflow simulate · ${lot.bbl}${job ? ` · ${job.status}` : running ? " · queued" : ""}`}
           />
           {job?.txSignature ? (
-            <p className="text-xs text-fg-muted">Report tx <Mono value={job.txSignature} href={explorerTx(job.txSignature)} chars={8} className="text-xs" /></p>
+            <p className="text-[13px] text-fg-muted">Report tx <Mono value={job.txSignature} href={explorerTx(job.txSignature)} chars={8} className="text-[12px]" /></p>
           ) : null}
           {job?.status === "failed" && !fresh ? (
-            <div className="rounded-xl border border-rose/25 bg-rose/5 p-4 text-sm">
-              <p className="font-medium text-rose">The CRE run failed{job.error ? `: ${job.error}` : ""}.</p>
-              <p className="mt-1 text-xs text-fg-muted">Check the log above. You can retry, or a registrar can record a manual verdict for this BBL.</p>
+            <div className="rounded-2xl bg-red/10 p-4 text-[14px]">
+              <p className="font-medium text-red-ink">The CRE run failed{job.error ? `: ${job.error}` : ""}.</p>
+              <p className="mt-1 text-[13px] text-fg-muted">Check the log above. You can retry, or a registrar can record a manual verdict for this BBL.</p>
               <Button className="mt-3" size="sm" variant="secondary" loading={busy} onClick={request}>Retry</Button>
             </div>
           ) : null}
@@ -396,11 +387,11 @@ function VerifyStep({ state, patch }: { state: WizardState; patch: (p: Partial<W
       ) : null}
 
       {fresh && verdict ? (
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+        <div className="mt-6 rounded-2xl bg-fill-2 p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-lg font-semibold tracking-tight">{pres.label}</p>
-              <p className="text-xs text-fg-muted">{pres.description}</p>
+              <p className="text-[18px] font-semibold tracking-[-0.01em] text-fg">{pres.label}</p>
+              <p className="text-[13px] text-fg-muted">{pres.description}</p>
             </div>
             <Badge tone={pres.tone}>{verdict.source === 1 ? "Chainlink CRE" : "Registrar"}</Badge>
           </div>
@@ -410,7 +401,7 @@ function VerifyStep({ state, patch }: { state: WizardState; patch: (p: Partial<W
             <Stat label="Confidence" value={`${(verdict.confidenceBps / 100).toFixed(0)}%`} size="sm" />
           </div>
           <FlagChips flags={verdict.flags} className="mt-4" />
-          <p className="mt-4 text-xs text-fg-muted">report hash <Mono value={verdict.reportHash} chars={8} className="text-xs" /> · verdict <Mono value={verdict.pda} href={explorerAddress(verdict.pda)} className="text-xs" /></p>
+          <p className="mt-4 text-[13px] text-fg-muted">report hash <Mono value={verdict.reportHash} chars={8} className="text-[12px]" /> · verdict <Mono value={verdict.pda} href={explorerAddress(verdict.pda)} className="text-[12px]" /></p>
           <div className="mt-5 flex flex-wrap gap-3">
             {verdict.status === 1 ? (
               <Button onClick={() => patch({ step: 4 })} iconRight={<ArrowRight className="size-4" />}>Continue to mint</Button>
@@ -464,15 +455,15 @@ function MintStep({ state, patch, registry }: { state: WizardState; patch: (p: P
 
   return (
     <StepCard icon={<Building2 className="size-5" />} title="Mint on Solana" subtitle="Creates a Metaplex Core asset inside the AirSpace collection with the verified attributes and a 5% royalty to the treasury, plus the on-chain Parcel account.">
-      <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+      <dl className="grid grid-cols-1 gap-3 text-[14px] sm:grid-cols-2">
         <Row k="Asset name" v={assetName(lot.address).slice(0, 32)} />
         <Row k="Collection" v={registry ? <Mono value={registry.collection} href={explorerAddress(registry.collection)} /> : "—"} />
-        <Row k="Owner attestation" v={ownerAttestation ? <Mono value={ownerAttestation} href={explorerAddress(ownerAttestation)} /> : <span className="text-rose">missing</span>} />
-        <Row k="Metadata URI" v={<span className="font-mono text-xs">/api/metadata/{lot.bbl}</span>} />
+        <Row k="Owner attestation" v={ownerAttestation ? <Mono value={ownerAttestation} href={explorerAddress(ownerAttestation)} /> : <span className="text-red-ink">missing</span>} />
+        <Row k="Metadata URI" v={<span className="font-mono text-[12px]">/api/metadata/{lot.bbl}</span>} />
         <Row k="Attributes" v={`bbl, address, borough, zoning, lot/built area, max FAR, unused sq ft, est. value, verdict hash, lat/lng, verified_by`} full />
       </dl>
       {!owner.hasAttestation && !state.ownerAttestation && owner.configured && !owner.loading ? (
-        <p className="mt-4 rounded-xl border border-amber/25 bg-amber/5 px-4 py-3 text-xs text-amber">No owner attestation found on-chain for this wallet and BBL. Go back to step 3 and confirm ownership.</p>
+        <Note tone="orange" className="mt-4">No owner attestation found on-chain for this wallet and BBL. Go back to step 3 and confirm ownership.</Note>
       ) : null}
       <div className="mt-6 flex flex-wrap gap-3">
         <Button loading={busy} onClick={mint} disabled={!registry || !ownerAttestation} icon={<Sparkles className="size-4" />}>Mint air rights</Button>
@@ -511,13 +502,13 @@ function ListStep({ state, patch, registry }: { state: WizardState; patch: (p: P
   return (
     <StepCard icon={<Check className="size-5" />} title="Set a price" subtitle="Prices are quoted in USD. Buyers pay the SOL equivalent at the live Pyth price; a marketplace fee goes to the treasury and the rest to you, atomically.">
       {state.mint ? (
-        <div className="mb-5 rounded-xl border border-emerald/25 bg-emerald/5 px-4 py-3 text-xs">
-          <span className="text-emerald">Minted</span> · asset <Mono value={state.mint.asset} href={explorerAddress(state.mint.asset)} className="text-xs" /> · tx <Mono value={state.mint.txSignature} href={explorerTx(state.mint.txSignature)} chars={6} className="text-xs" />
-        </div>
+        <Note tone="green" className="mb-5">
+          <span className="font-medium">Minted</span> · asset <Mono value={state.mint.asset} href={explorerAddress(state.mint.asset)} className="text-[12px]" /> · tx <Mono value={state.mint.txSignature} href={explorerTx(state.mint.txSignature)} chars={6} className="text-[12px]" />
+        </Note>
       ) : null}
       <Label hint={`estimated value ${formatUsd(verdictValue)}`}>Asking price (USD)</Label>
       <div className="relative">
-        <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-fg-faint">$</span>
+        <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[14px] text-fg-faint">$</span>
         <Input type="number" min={1} step={1000} inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} className="pl-8" />
       </div>
       <div className="mt-6 flex flex-wrap gap-3">
@@ -531,7 +522,7 @@ function ListStep({ state, patch, registry }: { state: WizardState; patch: (p: P
 function Row({ k, v, full }: { k: string; v: React.ReactNode; full?: boolean }) {
   return (
     <div className={cn("min-w-0", full && "sm:col-span-2")}>
-      <dt className="text-[11px] uppercase tracking-[0.14em] text-fg-faint">{k}</dt>
+      <dt className="text-[12px] text-fg-faint">{k}</dt>
       <dd className="truncate text-fg">{v}</dd>
     </div>
   );
@@ -542,7 +533,7 @@ function DoneStep({ state, onReset }: { state: WizardState; onReset: () => void 
   const lot = state.lot;
   return (
     <StepCard icon={<Check className="size-5" />} title={state.listing ? "Your air rights are live" : "Your air rights are minted"} subtitle={lot ? `${lot.address} · BBL ${lot.bbl}` : undefined}>
-      <ul className="space-y-2 text-sm">
+      <ul className="space-y-2 text-[14px]">
         {state.kyc ? <Li label="KYC attestation" value={state.kyc.attestation} href={explorerAddress(state.kyc.attestation)} /> : null}
         {state.ownerAttestation ? <Li label="Owner attestation" value={state.ownerAttestation.attestation} href={explorerAddress(state.ownerAttestation.attestation)} /> : null}
         {state.mint ? <Li label="Core asset" value={state.mint.asset} href={explorerAddress(state.mint.asset)} /> : null}
@@ -554,8 +545,8 @@ function DoneStep({ state, onReset }: { state: WizardState; onReset: () => void 
         <Button href="/portfolio" variant="secondary">Portfolio</Button>
         <Button variant="ghost" onClick={onReset} icon={<RotateCcw className="size-3.5" />}>List another</Button>
       </div>
-      <p className="mt-6 text-xs text-fg-faint">
-        Share it: <Link href={lot ? `/parcel/${lot.bbl}` : "/explore"} className="font-mono text-cyan hover:underline">{typeof window !== "undefined" && lot ? `${window.location.origin}/parcel/${lot.bbl}` : "/explore"}</Link>
+      <p className="mt-6 text-[13px] text-fg-faint">
+        Share it: <Link href={lot ? `/parcel/${lot.bbl}` : "/explore"} className="font-mono text-[12px] text-blue-ink hover:underline">{typeof window !== "undefined" && lot ? `${window.location.origin}/parcel/${lot.bbl}` : "/explore"}</Link>
       </p>
     </StepCard>
   );
@@ -563,7 +554,7 @@ function DoneStep({ state, onReset }: { state: WizardState; onReset: () => void 
 
 function Li({ label, value, href }: { label: string; value: string; href: string }) {
   return (
-    <li className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5">
+    <li className="flex items-center justify-between gap-3 rounded-2xl bg-fill-2 px-4 py-2.5">
       <span className="text-fg-muted">{label}</span>
       <Mono value={value} href={href} chars={6} />
     </li>

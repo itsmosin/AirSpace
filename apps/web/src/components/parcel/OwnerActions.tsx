@@ -49,7 +49,7 @@ export function OwnerActions({ parcel, registry, onDone, compact }: { parcel: Pa
 
   const body = listed ? (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm text-fg-muted">
+      <p className="text-[14px] text-fg-muted">
         Listed at <span className="font-semibold text-fg">{formatUsd(parcel.listing!.priceUsdCents / 100, true)}</span>. Buyers pay the SOL equivalent at the live Pyth price.
       </p>
       <Button variant="danger" size="sm" icon={<XCircle className="size-4" />} loading={busy} onClick={cancel}>
@@ -61,7 +61,7 @@ export function OwnerActions({ parcel, registry, onDone, compact }: { parcel: Pa
       <div className="flex-1">
         <Label hint={`Estimated value ${formatUsd(parcel.estValueUsd)}`}>Asking price (USD)</Label>
         <div className="relative">
-          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-fg-faint">$</span>
+          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[14px] text-fg-faint">$</span>
           <Input type="number" min={1} step={1000} inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} className="pl-8" />
         </div>
       </div>
@@ -75,7 +75,7 @@ export function OwnerActions({ parcel, registry, onDone, compact }: { parcel: Pa
   return (
     <Panel>
       <PanelHeader title="Owner actions" subtitle={listed ? "This parcel is in escrow" : "Set a USD price and move the asset into escrow"} />
-      <div className="px-5 py-5">{body}</div>
+      <div className="px-6 py-5">{body}</div>
     </Panel>
   );
 }

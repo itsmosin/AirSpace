@@ -23,13 +23,13 @@ export function PlutoFacts({ lot, loading, className }: { lot: PlutoLot | null; 
         ["Landmark", lot.landmark || "none"],
         ["Historic district", lot.historicDistrict || "none"],
         ["Owner of record", lot.ownerName ? titleCase(lot.ownerName) : "—"],
-        ["Coordinates", <span key="c" className="font-mono text-xs">{lot.lat.toFixed(5)}, {lot.lng.toFixed(5)}</span>],
+        ["Coordinates", <span key="c" className="font-mono text-[12px]">{lot.lat.toFixed(5)}, {lot.lng.toFixed(5)}</span>],
       ]
     : [];
   return (
     <Panel className={className}>
       <PanelHeader title="NYC PLUTO record" subtitle="Primary Land Use Tax Lot Output, Department of City Planning" />
-      <div className="px-5 py-3">
+      <div className="px-6 py-3">
         {loading ? (
           <div className="space-y-2 py-2">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -37,16 +37,16 @@ export function PlutoFacts({ lot, loading, className }: { lot: PlutoLot | null; 
             ))}
           </div>
         ) : lot ? (
-          <dl className="divide-y divide-white/5">
+          <dl className="divide-y divide-line">
             {rows.map(([k, v]) => (
-              <div key={k} className="flex items-center justify-between gap-4 py-2 text-sm">
+              <div key={k} className="flex items-center justify-between gap-4 py-2.5 text-[14px]">
                 <dt className="text-fg-muted">{k}</dt>
                 <dd className="truncate text-right text-fg">{v}</dd>
               </div>
             ))}
           </dl>
         ) : (
-          <p className="py-4 text-sm text-fg-muted">PLUTO record unavailable.</p>
+          <p className="py-4 text-[14px] text-fg-muted">PLUTO record unavailable.</p>
         )}
       </div>
     </Panel>

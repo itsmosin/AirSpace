@@ -26,6 +26,8 @@ import { PlutoFacts } from "./PlutoFacts";
 import { VerdictBadge } from "./VerdictBadge";
 import { VerificationPanel } from "./VerificationPanel";
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
 export function ParcelDetail({ bbl }: { bbl: string }) {
   const { parcel, pending, registry, loading, refresh, data } = useParcel(bbl);
   const pluto = usePluto(bbl);
@@ -55,23 +57,23 @@ export function ParcelDetail({ bbl }: { bbl: string }) {
   const notFound = !loading && !parcel && !pluto.loading && !lot && !verdict;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pt-24 pb-16 sm:px-6">
-      <Link href="/explore" className="inline-flex items-center gap-1.5 text-xs text-fg-muted hover:text-fg">
+    <div className="mx-auto max-w-7xl px-4 pb-8 pt-8 sm:px-6">
+      <Link href="/explore" className="inline-flex items-center gap-1.5 text-[13px] font-medium text-fg-muted hover:text-fg">
         <ArrowLeft className="size-3.5" /> Back to explore
       </Link>
 
-      <motion.header initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="mt-4 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <motion.header initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }} className="mt-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <VerdictBadge verdict={verdict} listed={!!parcel?.listing} />
             {parcel ? <Badge tone="neutral">Minted</Badge> : null}
-            {parcel?.listing ? <Badge tone="cyan">{formatUsd(parcel.listing.priceUsdCents / 100)}</Badge> : null}
+            {parcel?.listing ? <Badge tone="green">{formatUsd(parcel.listing.priceUsdCents / 100)}</Badge> : null}
           </div>
-          {initialLoading ? <Skeleton className="mt-3 h-10 w-80" /> : <h1 className="mt-3 text-3xl font-semibold tracking-[-0.03em] sm:text-4xl md:text-5xl">{address}</h1>}
-          <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-fg-muted">
+          {initialLoading ? <Skeleton className="mt-3 h-10 w-80" /> : <h1 className="display mt-3 text-[32px] font-semibold leading-[1.05] text-fg sm:text-[40px] md:text-[48px]">{address}</h1>}
+          <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] text-fg-muted">
             <span className="inline-flex items-center gap-1"><MapPin className="size-3.5" /> {borough}{zoning ? ` · ${zoning}` : ""}</span>
-            <span className="font-mono text-xs">BBL {bbl}</span>
-            {parcel ? <Mono value={parcel.pda} href={explorerAddress(parcel.pda)} className="text-xs text-fg-muted" /> : null}
+            <span className="font-mono text-[13px]">BBL {bbl}</span>
+            {parcel ? <Mono value={parcel.pda} href={explorerAddress(parcel.pda)} className="text-[12px] text-fg-muted" /> : null}
           </p>
         </div>
         {!parcel && verdict?.status === 1 ? (
@@ -83,31 +85,31 @@ export function ParcelDetail({ bbl }: { bbl: string }) {
 
       {notFound ? (
         <Panel className="mt-8 p-8 text-center">
-          <p className="text-lg font-semibold">We could not find this lot</p>
-          <p className="mt-1 text-sm text-fg-muted">No on-chain parcel, verdict or PLUTO record matched BBL {bbl}.</p>
+          <p className="text-[18px] font-semibold text-fg">We could not find this lot</p>
+          <p className="mt-1 text-[14px] text-fg-muted">No on-chain parcel, verdict or PLUTO record matched BBL {bbl}.</p>
         </Panel>
       ) : null}
 
-      <div className="mt-8 grid gap-4 md:grid-cols-[1fr_1fr] lg:grid-cols-[2fr_1fr]">
-        <Panel className="grid grid-cols-2 gap-6 p-6 sm:grid-cols-4">
-          <Stat label="Unused" value={<>{formatNumber(unusedSqft)} <span className="text-sm font-normal text-fg-muted">sq ft</span></>} loading={initialLoading} />
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.06, ease }} className="mt-8 grid gap-4 md:grid-cols-[1fr_1fr] lg:grid-cols-[2fr_1fr]">
+        <Panel className="grid grid-cols-2 gap-6 p-6 sm:grid-cols-4 md:p-7">
+          <Stat label="Unused" value={<>{formatNumber(unusedSqft)} <span className="text-[14px] font-normal text-fg-muted">sq ft</span></>} loading={initialLoading} />
           <Stat label="Est. value" value={formatCompactUsd(estValue)} hint={estValue ? formatUsd(estValue) : undefined} loading={initialLoading} />
-          <Stat label="Lot area" value={<>{formatNumber(lotArea)} <span className="text-sm font-normal text-fg-muted">sq ft</span></>} loading={initialLoading} />
-          <Stat label="Built area" value={<>{formatNumber(builtArea)} <span className="text-sm font-normal text-fg-muted">sq ft</span></>} loading={initialLoading} />
+          <Stat label="Lot area" value={<>{formatNumber(lotArea)} <span className="text-[14px] font-normal text-fg-muted">sq ft</span></>} loading={initialLoading} />
+          <Stat label="Built area" value={<>{formatNumber(builtArea)} <span className="text-[14px] font-normal text-fg-muted">sq ft</span></>} loading={initialLoading} />
           <div className="col-span-2 sm:col-span-4">
             <FarBar used={usedFar} allowed={maxFar} />
           </div>
         </Panel>
-        <div className="relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10">
-          <AirMapLazy parcels={mapParcels} selected={center ? bbl : null} interactive showPopups={false} placeholderCompact view={center ? { ...center, zoom: 16.2 } : undefined} />
+        <div className="relative min-h-[340px] overflow-hidden rounded-3xl border border-line shadow-card">
+          <AirMapLazy parcels={mapParcels} mini placeholderCompact view={center ? { ...center, zoom: 17, pitch: 65, bearing: 20 } : undefined} />
         </div>
-      </div>
+      </motion.div>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.12, ease }} className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <div className="flex flex-col gap-4">
           <VerificationPanel verdict={verdict} loading={verify.loading && !verify.data && loading} txSignature={job?.txSignature} />
           {job && (job.status === "running" || job.status === "queued" || (job.status === "failed" && verdict?.status === 0)) ? (
-            <Terminal text={job.log} live={job.status === "running" || job.status === "queued"} title={`cre · job ${job.id} · ${job.status}`} />
+            <Terminal text={job.log} live={job.status === "running" || job.status === "queued"} meta={`job ${job.id} · ${job.status}`} />
           ) : null}
           <PlutoFacts lot={lot} loading={pluto.loading && !lot} />
         </div>
@@ -116,7 +118,7 @@ export function ParcelDetail({ bbl }: { bbl: string }) {
           {parcel ? <OwnerActions parcel={parcel} registry={registry} onDone={refresh} /> : null}
           {parcel ? <BuyPanel parcel={parcel} registry={registry} onDone={refresh} /> : null}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

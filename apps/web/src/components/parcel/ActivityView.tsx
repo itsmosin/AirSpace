@@ -4,11 +4,12 @@ import Link from "next/link";
 import { useCallback } from "react";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { Activity, ExternalLink, RefreshCw } from "lucide-react";
+import { motion } from "framer-motion";
 import { Badge, type BadgeTone } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Mono } from "@/components/ui/Mono";
-import { Eyebrow } from "@/components/ui/Panel";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { decodeInstructionName, parseEventsFromLogs, plainEventData } from "@/lib/airspace/events";
 import { PROGRAM_ID } from "@/lib/airspace/pdas";
@@ -24,7 +25,7 @@ type Row = {
   events: Array<{ name: string; data: Record<string, string | number> }>;
 };
 
-const EVENT_TONE: Record<string, BadgeTone> = { VerdictRecorded: "violet", ParcelMinted: "cyan", ParcelListed: "cyan", ListingCancelled: "neutral", ParcelSold: "emerald" };
+const EVENT_TONE: Record<string, BadgeTone> = { VerdictRecorded: "purple", ParcelMinted: "blue", ParcelListed: "teal", ListingCancelled: "neutral", ParcelSold: "green" };
 const humanIx: Record<string, string> = {
   initializeRegistry: "Initialize registry", setAttestationConfig: "Set attestation config", createCollection: "Create collection", openVerdict: "Open verdict",
   onReport: "CRE report received", recordVerdictManual: "Manual verdict", mintParcel: "Mint parcel", listParcel: "List parcel", cancelListing: "Cancel listing", buyParcel: "Buy parcel",
@@ -78,35 +79,41 @@ export function ActivityView() {
   const { data, loading, error, refresh } = usePoll<Row[]>("activity", fetcher, { intervalMs: 30000, staleMs: 10000 });
 
   return (
-    <div className="mx-auto max-w-5xl px-4 pt-24 pb-16 sm:px-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <Eyebrow>Activity</Eyebrow>
-          <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Recent program transactions</h1>
-          <p className="mt-2 text-sm text-fg-muted">
-            Newest first, decoded from Anchor events on <Mono value={PROGRAM_ID.toBase58()} href={explorerAddress(PROGRAM_ID.toBase58())} className="text-xs" />
-          </p>
-        </div>
-        <Button variant="ghost" size="sm" icon={<RefreshCw className={cn("size-3.5", loading && "animate-spin")} />} onClick={() => void refresh()}>Refresh</Button>
-      </div>
+    <div className="mx-auto max-w-4xl px-4 pb-8 sm:px-6">
+      <SectionHeader
+        title="Recent program transactions"
+        description={
+          <>
+            Newest first, decoded from Anchor events on <Mono value={PROGRAM_ID.toBase58()} href={explorerAddress(PROGRAM_ID.toBase58())} className="text-[13px]" />
+          </>
+        }
+      >
+        <Button variant="secondary" size="sm" icon={<RefreshCw className={cn("size-3.5", loading && "animate-spin")} />} onClick={() => void refresh()}>Refresh</Button>
+      </SectionHeader>
 
-      <div className="mt-8 flex flex-col gap-3">
+      <div className="flex flex-col gap-3">
         {loading && !data ? (
-          Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-20 rounded-2xl" />)
+          Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-3xl" />)
         ) : error && !data ? (
           <EmptyState icon={<Activity className="size-5" />} title="Could not load activity" description={error} />
         ) : !data || data.length === 0 ? (
           <EmptyState icon={<Activity className="size-5" />} title="No transactions yet" description="Once the registry is initialized and parcels are verified, every program interaction shows up here." />
         ) : (
-          data.map((row) => (
-            <article key={row.signature} className={cn("glass rounded-2xl p-4 transition-colors hover:border-white/20", row.err && "border-rose/30")}>
+          data.map((row, i) => (
+            <motion.article
+              key={row.signature}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: Math.min(i, 8) * 0.06, ease: [0.22, 1, 0.36, 1] }}
+              className={cn("rounded-3xl border border-line bg-surface p-5 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card-hover", row.err && "border-red/40")}
+            >
               <div className="flex flex-wrap items-center gap-2">
                 {row.events.length ? row.events.map((e, i) => <Badge key={i} tone={EVENT_TONE[e.name] ?? "neutral"}>{e.name}</Badge>) : row.instructions.map((ix, i) => <Badge key={i} tone="neutral">{humanIx[ix] ?? ix}</Badge>)}
-                {row.err ? <Badge tone="rose">failed</Badge> : null}
-                <span className="ml-auto text-xs text-fg-faint">{row.blockTime ? timeAgo(row.blockTime) : `slot ${row.slot}`}</span>
+                {row.err ? <Badge tone="red">failed</Badge> : null}
+                <span className="ml-auto text-[12px] text-fg-faint">{row.blockTime ? timeAgo(row.blockTime) : `slot ${row.slot}`}</span>
               </div>
-              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-fg-muted">
-                <a href={explorerTx(row.signature)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono hover:text-cyan">
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-fg-muted">
+                <a href={explorerTx(row.signature)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[12px] hover:text-blue-ink">
                   {shortAddress(row.signature, 8)} <ExternalLink className="size-3" />
                 </a>
                 {row.instructions.length && row.events.length ? <span>{row.instructions.map((ix) => humanIx[ix] ?? ix).join(", ")}</span> : null}
@@ -114,7 +121,7 @@ export function ActivityView() {
               {row.events.map((e, i) => (
                 <EventSummary key={i} name={e.name} data={e.data} />
               ))}
-            </article>
+            </motion.article>
           ))
         )}
       </div>
@@ -125,7 +132,7 @@ export function ActivityView() {
 function EventSummary({ name, data }: { name: string; data: Record<string, string | number> }) {
   const bbl = String(data.bbl ?? "");
   const parts: React.ReactNode[] = [];
-  if (bbl) parts.push(<Link key="bbl" href={`/parcel/${bbl}`} className="font-mono text-cyan hover:underline">BBL {bbl}</Link>);
+  if (bbl) parts.push(<Link key="bbl" href={`/parcel/${bbl}`} className="font-mono text-[13px] font-medium text-blue-ink hover:underline">BBL {bbl}</Link>);
   if (name === "ParcelSold") {
     parts.push(<span key="p">{formatUsd(Number(data.priceUsdCents) / 100, true)} · {formatSol(Number(data.lamportsPaid))}</span>);
     parts.push(<span key="b">buyer {shortAddress(String(data.buyer))}</span>);
@@ -137,6 +144,6 @@ function EventSummary({ name, data }: { name: string; data: Record<string, strin
   } else if (name === "ParcelMinted") {
     parts.push(<span key="o">owner {shortAddress(String(data.owner))}</span>);
   }
-  if (data.asset) parts.push(<a key="a" href={explorerAddress(String(data.asset))} target="_blank" rel="noreferrer" className="font-mono hover:text-cyan">asset {shortAddress(String(data.asset))}</a>);
-  return <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-fg">{parts}</p>;
+  if (data.asset) parts.push(<a key="a" href={explorerAddress(String(data.asset))} target="_blank" rel="noreferrer" className="font-mono text-[13px] hover:text-blue-ink">asset {shortAddress(String(data.asset))}</a>);
+  return <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] text-fg">{parts}</p>;
 }
