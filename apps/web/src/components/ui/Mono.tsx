@@ -19,7 +19,7 @@ export function Mono({ value, href, short = true, chars = 4, className, copy = t
   return (
     <span className={cn("inline-flex max-w-full items-center gap-1.5 font-mono text-[13px] tracking-tight text-fg", className)} title={value}>
       {href ? (
-        <a href={href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 truncate hover:text-cyan">
+        <a href={href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 truncate hover:text-blue-ink">
           <span className="truncate">{text}</span>
           <ExternalLink className="size-3 shrink-0 opacity-60" />
         </a>
@@ -27,8 +27,8 @@ export function Mono({ value, href, short = true, chars = 4, className, copy = t
         <span className="truncate">{text}</span>
       )}
       {copy ? (
-        <button type="button" onClick={onCopy} className="rounded p-0.5 text-fg-faint hover:bg-white/10 hover:text-fg" aria-label="Copy">
-          {copied ? <Check className="size-3 text-emerald" /> : <Copy className="size-3" />}
+        <button type="button" onClick={onCopy} className="rounded p-0.5 text-fg-faint hover:bg-fill hover:text-fg" aria-label="Copy">
+          {copied ? <Check className="size-3 text-green-ink" /> : <Copy className="size-3" />}
         </button>
       ) : null}
     </span>

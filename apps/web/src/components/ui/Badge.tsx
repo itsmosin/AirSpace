@@ -1,21 +1,55 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export type BadgeTone = "cyan" | "violet" | "amber" | "rose" | "emerald" | "neutral";
+export type AccentTone = "blue" | "green" | "orange" | "red" | "purple" | "yellow" | "teal" | "neutral";
+/** Semantic tone names used by verdict and flag presentation; resolved to accents here. */
+type SemanticTone = "cyan" | "violet" | "amber" | "rose" | "emerald";
+export type BadgeTone = AccentTone | SemanticTone;
 
-const tones: Record<BadgeTone, string> = {
-  cyan: "bg-cyan/10 text-cyan border-cyan/30",
-  violet: "bg-violet/10 text-violet border-violet/30",
-  amber: "bg-amber/10 text-amber border-amber/30",
-  rose: "bg-rose/10 text-rose border-rose/30",
-  emerald: "bg-emerald/10 text-emerald border-emerald/30",
-  neutral: "bg-white/5 text-fg-muted border-white/10",
+const semantic: Record<SemanticTone, AccentTone> = { cyan: "green", emerald: "green", violet: "orange", amber: "yellow", rose: "red" };
+
+export function resolveTone(tone: BadgeTone): AccentTone {
+  return (semantic as Record<string, AccentTone>)[tone] ?? (tone as AccentTone);
+}
+
+const tones: Record<AccentTone, string> = {
+  blue: "bg-blue/12 text-blue-ink",
+  green: "bg-green/14 text-green-ink",
+  orange: "bg-orange/14 text-orange-ink",
+  red: "bg-red/12 text-red-ink",
+  purple: "bg-purple/12 text-purple-ink",
+  yellow: "bg-yellow/20 text-yellow-ink",
+  teal: "bg-teal/16 text-teal-ink",
+  neutral: "bg-fill text-fg-muted",
+};
+
+export const toneText: Record<AccentTone, string> = {
+  blue: "text-blue-ink",
+  green: "text-green-ink",
+  orange: "text-orange-ink",
+  red: "text-red-ink",
+  purple: "text-purple-ink",
+  yellow: "text-yellow-ink",
+  teal: "text-teal-ink",
+  neutral: "text-fg-muted",
+};
+
+export const toneDot: Record<AccentTone, string> = {
+  blue: "bg-blue",
+  green: "bg-green",
+  orange: "bg-orange",
+  red: "bg-red",
+  purple: "bg-purple",
+  yellow: "bg-yellow",
+  teal: "bg-teal",
+  neutral: "bg-fg-faint",
 };
 
 export function Badge({ tone = "neutral", children, className, dot }: { tone?: BadgeTone; children: ReactNode; className?: string; dot?: boolean }) {
+  const t = resolveTone(tone);
   return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em]", tones[tone], className)}>
-      {dot ? <span className={cn("size-1.5 rounded-full bg-current", tone === "amber" || tone === "violet" ? "animate-pulse-soft" : "")} /> : null}
+    <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-medium leading-none", tones[t], className)}>
+      {dot ? <span className={cn("size-1.5 rounded-full", toneDot[t], t === "orange" || t === "yellow" ? "animate-pulse-soft" : "")} /> : null}
       {children}
     </span>
   );

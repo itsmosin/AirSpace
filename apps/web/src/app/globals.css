@@ -1,38 +1,120 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- Design tokens ---------- */
 :root {
-  --bg: #07090f;
-  --bg-elevated: #0b0f19;
-  --fg: #e6e9f2;
-  --fg-muted: #8b93a7;
-  --fg-faint: #5b6378;
-  --cyan: #22d3ee;
-  --violet: #8b5cf6;
-  --amber: #f59e0b;
-  --rose: #fb7185;
-  --emerald: #34d399;
-  --line: rgba(255, 255, 255, 0.1);
-  --glass: rgba(255, 255, 255, 0.05);
-  --radius: 16px;
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --surface-2: #fafafa;
+  --fill: #e8e8ed;
+  --fill-2: #f0f0f3;
+  --fg: #1d1d1f;
+  --fg-muted: #6e6e73;
+  --fg-faint: #86868b;
+  --line: rgba(0, 0, 0, 0.08);
+  --line-strong: rgba(0, 0, 0, 0.14);
+
+  --blue: #0a84ff;
+  --green: #30d158;
+  --orange: #ff9f0a;
+  --red: #ff453a;
+  --purple: #bf5af2;
+  --yellow: #ffd60a;
+  --teal: #64d2ff;
+
+  /* text-safe variants of the accents for small type on light surfaces */
+  --blue-ink: #0066cc;
+  --green-ink: #1f8a3f;
+  --orange-ink: #b35a00;
+  --red-ink: #d70015;
+  --purple-ink: #8944ab;
+  --yellow-ink: #8a6500;
+  --teal-ink: #0071a4;
+
+  --tint-green: #e9f8ee;
+  --tint-orange: #fff1e0;
+  --tint-blue: #e8f1ff;
+  --log-bg: #f0f0f3;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px -20px rgba(0, 0, 0, 0.14);
+  --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.05), 0 20px 44px -20px rgba(0, 0, 0, 0.2);
+  --shadow-pop: 0 12px 40px -12px rgba(0, 0, 0, 0.25);
+}
+
+.dark {
+  --bg: #0b0b0f;
+  --surface: #1c1c1e;
+  --surface-2: #232326;
+  --fill: #2c2c2e;
+  --fill-2: #3a3a3c;
+  --fg: #f5f5f7;
+  --fg-muted: #a1a1a6;
+  --fg-faint: #7c7c82;
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.2);
+
+  --blue-ink: var(--blue);
+  --green-ink: var(--green);
+  --orange-ink: var(--orange);
+  --red-ink: var(--red);
+  --purple-ink: var(--purple);
+  --yellow-ink: var(--yellow);
+  --teal-ink: var(--teal);
+
+  --tint-green: #0f2a18;
+  --tint-orange: #2a1a08;
+  --tint-blue: #0b1a2e;
+  --log-bg: #000000;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -20px rgba(0, 0, 0, 0.6);
+  --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.35), 0 20px 44px -20px rgba(0, 0, 0, 0.7);
+  --shadow-pop: 0 12px 40px -12px rgba(0, 0, 0, 0.7);
 }
 
 @theme inline {
   --color-bg: var(--bg);
-  --color-bg-elevated: var(--bg-elevated);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fill: var(--fill);
+  --color-fill-2: var(--fill-2);
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-fg-faint: var(--fg-faint);
-  --color-cyan: var(--cyan);
-  --color-violet: var(--violet);
-  --color-amber: var(--amber);
-  --color-rose: var(--rose);
-  --color-emerald: var(--emerald);
   --color-line: var(--line);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-line-strong: var(--line-strong);
+
+  --color-blue: var(--blue);
+  --color-green: var(--green);
+  --color-orange: var(--orange);
+  --color-red: var(--red);
+  --color-purple: var(--purple);
+  --color-yellow: var(--yellow);
+  --color-teal: var(--teal);
+
+  --color-blue-ink: var(--blue-ink);
+  --color-green-ink: var(--green-ink);
+  --color-orange-ink: var(--orange-ink);
+  --color-red-ink: var(--red-ink);
+  --color-purple-ink: var(--purple-ink);
+  --color-yellow-ink: var(--yellow-ink);
+  --color-teal-ink: var(--teal-ink);
+
+  --color-tint-green: var(--tint-green);
+  --color-tint-orange: var(--tint-orange);
+  --color-tint-blue: var(--tint-blue);
+  --color-log: var(--log-bg);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-card-hover: var(--shadow-card-hover);
+  --shadow-pop: var(--shadow-pop);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
   --animate-shimmer: shimmer 1.6s linear infinite;
   --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
-  --animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-float: float 9s ease-in-out infinite;
 }
 
 @keyframes shimmer {
@@ -43,110 +125,170 @@
   0%, 100% { opacity: 0.55; }
   50% { opacity: 1; }
 }
-@keyframes rise {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, -10px, 0) rotate(1.5deg); }
 }
 
+/* ---------- Base ---------- */
 html {
-  color-scheme: dark;
+  color-scheme: light;
   scroll-behavior: smooth;
+}
+html.dark {
+  color-scheme: dark;
 }
 
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  transition: background-color 300ms ease, color 300ms ease;
 }
 
 ::selection {
-  background: color-mix(in oklab, var(--cyan) 35%, transparent);
+  background: color-mix(in oklab, var(--blue) 25%, transparent);
 }
 
-/* Ambient background glows */
-.bg-ambient {
-  background-image:
-    radial-gradient(900px 500px at 15% -10%, color-mix(in oklab, var(--cyan) 14%, transparent), transparent 60%),
-    radial-gradient(800px 500px at 90% 10%, color-mix(in oklab, var(--violet) 16%, transparent), transparent 60%),
-    radial-gradient(700px 400px at 50% 110%, color-mix(in oklab, var(--cyan) 8%, transparent), transparent 60%);
+.display {
+  letter-spacing: -0.03em;
 }
 
-.glass {
-  background: var(--glass);
-  border: 1px solid var(--line);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.glass-strong {
-  background: rgba(11, 15, 25, 0.78);
-  border: 1px solid var(--line);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-.text-gradient {
-  background: linear-gradient(100deg, #ffffff 0%, #c7f6ff 45%, #c4b5fd 100%);
+/* The one gradient word in a headline. */
+.text-rainbow {
+  background: linear-gradient(90deg, var(--blue) 0%, var(--purple) 38%, var(--red) 70%, var(--orange) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-
-.ring-glow-cyan {
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--cyan) 40%, transparent), 0 0 40px -10px color-mix(in oklab, var(--cyan) 60%, transparent);
-}
-.ring-glow-violet {
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--violet) 40%, transparent), 0 0 40px -10px color-mix(in oklab, var(--violet) 60%, transparent);
+  padding-right: 0.05em;
 }
 
 .skeleton {
-  background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.04) 100%);
+  background: linear-gradient(90deg, var(--fill-2) 0%, var(--fill) 50%, var(--fill-2) 100%);
   background-size: 200% 100%;
   animation: var(--animate-shimmer);
   border-radius: 8px;
 }
 
-.grid-fade {
-  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+/* Faint dotted grid field behind hero sections. */
+.dot-field {
+  background-image: radial-gradient(color-mix(in oklab, var(--fg) 14%, transparent) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 72%);
 }
 
 .scrollbar-thin {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.12) transparent;
+  scrollbar-color: var(--line-strong) transparent;
 }
 .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
-.scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 8px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 8px; }
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
 
-/* Mapbox overrides */
-.mapboxgl-ctrl-logo, .mapboxgl-ctrl-attrib { opacity: 0.35; }
-.mapboxgl-popup-content {
-  background: rgba(11, 15, 25, 0.92) !important;
-  color: var(--fg) !important;
-  border: 1px solid var(--line);
-  border-radius: 12px !important;
-  padding: 12px 14px !important;
-  box-shadow: 0 20px 50px -20px rgba(0,0,0,0.8) !important;
-  font-family: var(--font-sans);
+/* ---------- Hero corner tiles (CSS gradients only) ---------- */
+.tile {
+  border-radius: 28%;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
-.mapboxgl-popup-tip { border-top-color: rgba(11, 15, 25, 0.92) !important; border-bottom-color: rgba(11, 15, 25, 0.92) !important; }
-.mapboxgl-popup-close-button { color: var(--fg-muted) !important; font-size: 18px; right: 6px; top: 4px; }
-.mapboxgl-popup-close-button:hover { background: transparent !important; color: var(--fg) !important; }
+.tile-steel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0) 40%),
+    linear-gradient(160deg, var(--teal) 0%, var(--blue) 48%, color-mix(in oklab, var(--blue) 45%, black) 100%);
+}
+.tile-diagonals {
+  background:
+    repeating-linear-gradient(45deg, var(--green) 0 26px, color-mix(in oklab, var(--green) 70%, black) 26px 30px, var(--yellow) 30px 56px, color-mix(in oklab, var(--yellow) 70%, black) 56px 60px);
+}
+.tile-stripe {
+  background:
+    linear-gradient(118deg, var(--purple) 0 46%, color-mix(in oklab, var(--purple) 60%, white) 46% 52%, var(--red) 52% 100%);
+}
+.tile-chevron {
+  background:
+    linear-gradient(135deg, var(--red) 0 30%, transparent 30%),
+    linear-gradient(225deg, var(--red) 0 30%, transparent 30%),
+    linear-gradient(135deg, transparent 0 46%, var(--orange) 46% 62%, transparent 62%),
+    linear-gradient(225deg, transparent 0 46%, var(--orange) 46% 62%, transparent 62%),
+    linear-gradient(180deg, var(--yellow), color-mix(in oklab, var(--yellow) 70%, var(--orange)));
+}
 
-/* Wallet adapter modal restyle */
+/* ---------- Mapbox overrides ---------- */
+.mapboxgl-ctrl-logo, .mapboxgl-ctrl-attrib { opacity: 0.55; }
+.mapboxgl-ctrl-group {
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.4) !important;
+  background: rgba(17, 17, 17, 0.88) !important;
+  backdrop-filter: blur(10px);
+}
+.mapboxgl-ctrl-group button { background: transparent !important; width: 34px !important; height: 34px !important; }
+.mapboxgl-ctrl-group button + button { border-top: 1px solid rgba(255, 255, 255, 0.12) !important; }
+.mapboxgl-ctrl-group button .mapboxgl-ctrl-icon { filter: invert(1); }
+.mapboxgl-ctrl-group button:hover { background: rgba(255, 255, 255, 0.1) !important; }
+.mapboxgl-ctrl-bottom-right { margin-bottom: 44px; }
+.mapboxgl-ctrl-bottom-left .mapboxgl-ctrl { margin: 0 0 6px 8px; }
+
+/* Dark translucent pills layered over satellite imagery (theme independent). */
+.map-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.85);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 16px -6px rgba(0, 0, 0, 0.5);
+}
+.map-pill-sm { height: 26px; padding: 0 10px; font-size: 11px; gap: 6px; }
+.map-pill-button { cursor: pointer; transition: background-color 150ms ease; }
+.map-pill-button:hover { background: rgba(40, 40, 44, 0.92); }
+
+/* Parcel card popup: dark, anchored above the marker */
+.air-popup .mapboxgl-popup-content {
+  background: rgba(17, 17, 17, 0.92) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px !important;
+  padding: 16px !important;
+  width: 300px;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.6) !important;
+  font-family: var(--font-sans);
+  backdrop-filter: blur(12px);
+}
+.air-popup .mapboxgl-popup-tip { border-top-color: rgba(17, 17, 17, 0.92) !important; border-bottom-color: rgba(17, 17, 17, 0.92) !important; }
+.air-popup.mapboxgl-popup-anchor-left .mapboxgl-popup-tip { border-right-color: rgba(17, 17, 17, 0.92) !important; }
+.air-popup.mapboxgl-popup-anchor-right .mapboxgl-popup-tip { border-left-color: rgba(17, 17, 17, 0.92) !important; }
+.air-popup .mapboxgl-popup-close-button { display: none; }
+.air-popup { z-index: 5; }
+
+/* ---------- Wallet adapter modal ---------- */
 .wallet-adapter-modal-wrapper {
-  background: #0b0f19 !important;
+  background: var(--surface) !important;
   border: 1px solid var(--line);
-  border-radius: 20px !important;
+  border-radius: 24px !important;
   font-family: var(--font-sans) !important;
+  box-shadow: var(--shadow-pop) !important;
 }
 .wallet-adapter-modal-title { color: var(--fg) !important; font-weight: 600 !important; letter-spacing: -0.02em; }
-.wallet-adapter-modal-list .wallet-adapter-button { font-family: var(--font-sans) !important; border-radius: 12px !important; }
-.wallet-adapter-modal-list .wallet-adapter-button:hover { background: rgba(255,255,255,0.06) !important; }
-.wallet-adapter-modal-overlay { background: rgba(7, 9, 15, 0.75) !important; backdrop-filter: blur(6px); }
-.wallet-adapter-modal-button-close { background: rgba(255,255,255,0.06) !important; }
+.wallet-adapter-modal-list .wallet-adapter-button { font-family: var(--font-sans) !important; border-radius: 14px !important; color: var(--fg) !important; }
+.wallet-adapter-modal-list .wallet-adapter-button:hover { background: var(--fill) !important; }
+.wallet-adapter-modal-overlay { background: rgba(0, 0, 0, 0.45) !important; backdrop-filter: blur(6px); }
+.wallet-adapter-modal-button-close { background: var(--fill) !important; }
+.wallet-adapter-modal-button-close svg { fill: var(--fg) !important; }
 .wallet-adapter-modal-list-more { color: var(--fg-muted) !important; }
+.wallet-adapter-modal-list-more svg { fill: var(--fg-muted) !important; }
+.wallet-adapter-modal-middle { color: var(--fg-muted) !important; }
+.wallet-adapter-modal-middle-button { background: var(--fg) !important; color: var(--bg) !important; border-radius: 999px !important; }

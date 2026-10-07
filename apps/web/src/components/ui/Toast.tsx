@@ -26,9 +26,9 @@ export function useToast() {
 }
 
 const icons: Record<ToastVariant, ReactNode> = {
-  success: <CheckCircle2 className="size-4 text-emerald" />,
-  error: <AlertTriangle className="size-4 text-rose" />,
-  info: <Info className="size-4 text-cyan" />,
+  success: <CheckCircle2 className="size-4 text-green-ink" />,
+  error: <AlertTriangle className="size-4 text-red-ink" />,
+  info: <Info className="size-4 text-blue-ink" />,
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -59,22 +59,22 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 8, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 420, damping: 32 }}
-              className={cn("pointer-events-auto w-full max-w-[380px] rounded-xl glass-strong p-3.5 pr-10 shadow-2xl", t.variant === "error" ? "border-rose/30" : t.variant === "success" ? "border-emerald/30" : "")}
+              className={cn("pointer-events-auto w-full max-w-[380px] rounded-2xl border border-line bg-surface p-4 pr-10 shadow-pop", t.variant === "error" ? "border-red/40" : t.variant === "success" ? "border-green/40" : "")}
               role="status"
             >
               <div className="flex gap-3">
                 <div className="mt-0.5 shrink-0">{icons[t.variant ?? "info"]}</div>
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-fg">{t.title}</p>
-                  {t.description ? <p className="mt-0.5 break-words text-xs leading-relaxed text-fg-muted">{t.description}</p> : null}
+                  <p className="text-[14px] font-medium text-fg">{t.title}</p>
+                  {t.description ? <p className="mt-0.5 break-words text-[13px] leading-relaxed text-fg-muted">{t.description}</p> : null}
                   {t.href ? (
-                    <a href={t.href} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-cyan hover:underline">
+                    <a href={t.href} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-[13px] font-medium text-blue-ink hover:underline">
                       {t.hrefLabel ?? "View on explorer"} <ExternalLink className="size-3" />
                     </a>
                   ) : null}
                 </div>
               </div>
-              <button onClick={() => dismiss(t.id)} className="absolute right-2.5 top-2.5 rounded-md p-1 text-fg-faint hover:bg-white/10 hover:text-fg" aria-label="Dismiss">
+              <button onClick={() => dismiss(t.id)} className="absolute right-2.5 top-2.5 rounded-full p-1 text-fg-faint hover:bg-fill hover:text-fg" aria-label="Dismiss">
                 <X className="size-3.5" />
               </button>
             </motion.div>
