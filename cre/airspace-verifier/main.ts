@@ -232,7 +232,6 @@ const runLlmAudit = (
 	const body = JSON.stringify({
 		model: runtime.config.llmModel,
 		max_tokens: 600,
-		temperature: 0,
 		system: SYSTEM_PROMPT,
 		messages: [{ role: 'user', content: buildAuditPrompt(lot, submitted) }],
 	})
@@ -250,7 +249,7 @@ const runLlmAudit = (
 			cacheSettings: { store: false },
 		})
 		.result()
-	if (!ok(resp)) throw new Error(`LLM request failed: HTTP ${resp.statusCode}`)
+	if (!ok(resp)) throw new Error(`LLM request failed: HTTP ${resp.statusCode} ${text(resp).slice(0, 300)}`)
 
 	const parsed = JSON.parse(text(resp)) as { content?: Array<{ type?: string; text?: string }> }
 	const textOut = (parsed.content ?? []).find((c) => c.type === 'text' && typeof c.text === 'string')?.text ?? ''
