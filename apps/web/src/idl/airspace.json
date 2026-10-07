@@ -1,0 +1,1405 @@
+{
+  "address": "5PNnqSxWCktbS7pUtt5MXCuQEVfztjYuLpvVvbB3oxeZ",
+  "metadata": {
+    "name": "airspace",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "AirSpace: verified NYC air-rights marketplace (provisional IDL generated from docs/INTERFACES.md)"
+  },
+  "instructions": [
+    {
+      "name": "initialize_registry",
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "registrar",
+          "type": "pubkey"
+        },
+        {
+          "name": "treasury",
+          "type": "pubkey"
+        },
+        {
+          "name": "forwarder_program",
+          "type": "pubkey"
+        },
+        {
+          "name": "fee_bps",
+          "type": "u16"
+        },
+        {
+          "name": "max_price_age_secs",
+          "type": "u32"
+        }
+      ],
+      "discriminator": [
+        189,
+        181,
+        20,
+        17,
+        174,
+        57,
+        249,
+        59
+      ]
+    },
+    {
+      "name": "set_attestation_config",
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "owner_credential",
+          "type": "pubkey"
+        },
+        {
+          "name": "owner_schema",
+          "type": "pubkey"
+        },
+        {
+          "name": "kyc_credential",
+          "type": "pubkey"
+        },
+        {
+          "name": "kyc_schema",
+          "type": "pubkey"
+        }
+      ],
+      "discriminator": [
+        18,
+        220,
+        255,
+        4,
+        72,
+        218,
+        233,
+        45
+      ]
+    },
+    {
+      "name": "create_collection",
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "collection",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mpl_core_program",
+          "address": "CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        }
+      ],
+      "discriminator": [
+        156,
+        251,
+        92,
+        54,
+        233,
+        2,
+        16,
+        82
+      ]
+    },
+    {
+      "name": "open_verdict",
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "verdict",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  101,
+                  114,
+                  100,
+                  105,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "bbl"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "bbl",
+          "type": "string"
+        }
+      ],
+      "discriminator": [
+        129,
+        74,
+        141,
+        23,
+        125,
+        39,
+        240,
+        218
+      ]
+    },
+    {
+      "name": "on_report",
+      "accounts": [
+        {
+          "name": "state"
+        },
+        {
+          "name": "forwarder_authority",
+          "signer": true
+        },
+        {
+          "name": "registry",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "verdict",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "metadata",
+          "type": "bytes"
+        },
+        {
+          "name": "report",
+          "type": "bytes"
+        }
+      ],
+      "discriminator": [
+        214,
+        173,
+        18,
+        221,
+        173,
+        148,
+        151,
+        208
+      ]
+    },
+    {
+      "name": "record_verdict_manual",
+      "accounts": [
+        {
+          "name": "registrar",
+          "signer": true
+        },
+        {
+          "name": "registry",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "verdict",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "status",
+          "type": "u8"
+        },
+        {
+          "name": "confidence_bps",
+          "type": "u16"
+        },
+        {
+          "name": "flags",
+          "type": "u32"
+        },
+        {
+          "name": "unused_sqft",
+          "type": "u64"
+        },
+        {
+          "name": "est_value_usd",
+          "type": "u64"
+        },
+        {
+          "name": "report_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ],
+      "discriminator": [
+        193,
+        154,
+        126,
+        9,
+        149,
+        124,
+        214,
+        208
+      ]
+    },
+    {
+      "name": "mint_parcel",
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "verdict"
+        },
+        {
+          "name": "owner_attestation"
+        },
+        {
+          "name": "parcel",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  97,
+                  114,
+                  99,
+                  101,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "verdict.bbl",
+                "account": "Verdict"
+              }
+            ]
+          }
+        },
+        {
+          "name": "asset",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "collection",
+          "writable": true
+        },
+        {
+          "name": "mpl_core_program",
+          "address": "CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "MintParcelArgs"
+            }
+          }
+        }
+      ],
+      "discriminator": [
+        158,
+        42,
+        246,
+        137,
+        217,
+        57,
+        167,
+        210
+      ]
+    },
+    {
+      "name": "list_parcel",
+      "accounts": [
+        {
+          "name": "seller",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "registry",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "parcel",
+          "writable": true
+        },
+        {
+          "name": "listing",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  105,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "parcel"
+              }
+            ]
+          }
+        },
+        {
+          "name": "asset",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "writable": true
+        },
+        {
+          "name": "escrow",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mpl_core_program",
+          "address": "CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "price_usd_cents",
+          "type": "u64"
+        }
+      ],
+      "discriminator": [
+        130,
+        223,
+        115,
+        4,
+        28,
+        75,
+        19,
+        161
+      ]
+    },
+    {
+      "name": "cancel_listing",
+      "accounts": [
+        {
+          "name": "seller",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "parcel",
+          "writable": true
+        },
+        {
+          "name": "listing",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  105,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "parcel"
+              }
+            ]
+          }
+        },
+        {
+          "name": "asset",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "writable": true
+        },
+        {
+          "name": "escrow",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mpl_core_program",
+          "address": "CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [],
+      "discriminator": [
+        41,
+        183,
+        50,
+        232,
+        230,
+        233,
+        157,
+        70
+      ]
+    },
+    {
+      "name": "buy_parcel",
+      "accounts": [
+        {
+          "name": "buyer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "registry",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "parcel",
+          "writable": true
+        },
+        {
+          "name": "listing",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  105,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "parcel"
+              }
+            ]
+          }
+        },
+        {
+          "name": "seller",
+          "writable": true
+        },
+        {
+          "name": "treasury",
+          "writable": true
+        },
+        {
+          "name": "buyer_attestation"
+        },
+        {
+          "name": "price_update"
+        },
+        {
+          "name": "asset",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "writable": true
+        },
+        {
+          "name": "escrow",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mpl_core_program",
+          "address": "CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [],
+      "discriminator": [
+        31,
+        210,
+        32,
+        152,
+        108,
+        178,
+        85,
+        0
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Registry",
+      "discriminator": [
+        47,
+        174,
+        110,
+        246,
+        184,
+        182,
+        252,
+        218
+      ]
+    },
+    {
+      "name": "Verdict",
+      "discriminator": [
+        169,
+        1,
+        171,
+        69,
+        24,
+        106,
+        66,
+        193
+      ]
+    },
+    {
+      "name": "Parcel",
+      "discriminator": [
+        149,
+        167,
+        245,
+        67,
+        209,
+        244,
+        214,
+        75
+      ]
+    },
+    {
+      "name": "Listing",
+      "discriminator": [
+        218,
+        32,
+        50,
+        73,
+        43,
+        134,
+        26,
+        58
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "VerdictRecorded",
+      "discriminator": [
+        144,
+        96,
+        183,
+        176,
+        102,
+        238,
+        139,
+        155
+      ]
+    },
+    {
+      "name": "ParcelMinted",
+      "discriminator": [
+        162,
+        154,
+        225,
+        23,
+        24,
+        114,
+        153,
+        38
+      ]
+    },
+    {
+      "name": "ParcelListed",
+      "discriminator": [
+        10,
+        138,
+        75,
+        142,
+        102,
+        248,
+        110,
+        51
+      ]
+    },
+    {
+      "name": "ListingCancelled",
+      "discriminator": [
+        11,
+        46,
+        163,
+        10,
+        103,
+        80,
+        139,
+        194
+      ]
+    },
+    {
+      "name": "ParcelSold",
+      "discriminator": [
+        80,
+        203,
+        139,
+        89,
+        23,
+        190,
+        205,
+        222
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized",
+      "msg": "Signer is not authorized for this action"
+    },
+    {
+      "code": 6001,
+      "name": "VerdictNotAllowed",
+      "msg": "Verdict status is not Allow"
+    },
+    {
+      "code": 6002,
+      "name": "VerdictLocked",
+      "msg": "Verdict is locked because a parcel was already minted"
+    },
+    {
+      "code": 6003,
+      "name": "BblMismatch",
+      "msg": "BBL in report does not match verdict"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidAttestation",
+      "msg": "Attestation account is invalid"
+    },
+    {
+      "code": 6005,
+      "name": "AttestationExpired",
+      "msg": "Attestation has expired"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidForwarderProgram",
+      "msg": "Forwarder program mismatch"
+    },
+    {
+      "code": 6007,
+      "name": "InvalidForwarderAuthority",
+      "msg": "Forwarder authority mismatch"
+    },
+    {
+      "code": 6008,
+      "name": "InvalidReportPayload",
+      "msg": "Report payload could not be decoded"
+    },
+    {
+      "code": 6009,
+      "name": "InvalidPriceAccount",
+      "msg": "Price account is invalid"
+    },
+    {
+      "code": 6010,
+      "name": "StalePrice",
+      "msg": "Price is stale"
+    },
+    {
+      "code": 6011,
+      "name": "WrongFeed",
+      "msg": "Wrong price feed"
+    },
+    {
+      "code": 6012,
+      "name": "ParcelNotListed",
+      "msg": "Parcel is not listed"
+    },
+    {
+      "code": 6013,
+      "name": "ParcelAlreadyListed",
+      "msg": "Parcel is already listed"
+    },
+    {
+      "code": 6014,
+      "name": "MathOverflow",
+      "msg": "Arithmetic overflow"
+    },
+    {
+      "code": 6015,
+      "name": "InvalidArgs",
+      "msg": "Invalid arguments"
+    }
+  ],
+  "types": [
+    {
+      "name": "Registry",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "registrar",
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "forwarder_program",
+            "type": "pubkey"
+          },
+          {
+            "name": "collection",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner_credential",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner_schema",
+            "type": "pubkey"
+          },
+          {
+            "name": "kyc_credential",
+            "type": "pubkey"
+          },
+          {
+            "name": "kyc_schema",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "max_price_age_secs",
+            "type": "u32"
+          },
+          {
+            "name": "parcel_count",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Verdict",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bbl",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          },
+          {
+            "name": "confidence_bps",
+            "type": "u16"
+          },
+          {
+            "name": "flags",
+            "type": "u32"
+          },
+          {
+            "name": "unused_sqft",
+            "type": "u64"
+          },
+          {
+            "name": "est_value_usd",
+            "type": "u64"
+          },
+          {
+            "name": "report_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "source",
+            "type": "u8"
+          },
+          {
+            "name": "requester",
+            "type": "pubkey"
+          },
+          {
+            "name": "requested_at",
+            "type": "i64"
+          },
+          {
+            "name": "recorded_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Parcel",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bbl",
+            "type": "string"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "core_asset",
+            "type": "pubkey"
+          },
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "borough",
+            "type": "u8"
+          },
+          {
+            "name": "lat_e6",
+            "type": "i32"
+          },
+          {
+            "name": "lng_e6",
+            "type": "i32"
+          },
+          {
+            "name": "lot_area_sqft",
+            "type": "u32"
+          },
+          {
+            "name": "built_area_sqft",
+            "type": "u32"
+          },
+          {
+            "name": "max_far_bps",
+            "type": "u32"
+          },
+          {
+            "name": "unused_sqft",
+            "type": "u64"
+          },
+          {
+            "name": "est_value_usd",
+            "type": "u64"
+          },
+          {
+            "name": "zoning",
+            "type": "string"
+          },
+          {
+            "name": "verdict_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          },
+          {
+            "name": "minted_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Listing",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "parcel",
+            "type": "pubkey"
+          },
+          {
+            "name": "seller",
+            "type": "pubkey"
+          },
+          {
+            "name": "price_usd_cents",
+            "type": "u64"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MintParcelArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "borough",
+            "type": "u8"
+          },
+          {
+            "name": "lat_e6",
+            "type": "i32"
+          },
+          {
+            "name": "lng_e6",
+            "type": "i32"
+          },
+          {
+            "name": "lot_area_sqft",
+            "type": "u32"
+          },
+          {
+            "name": "built_area_sqft",
+            "type": "u32"
+          },
+          {
+            "name": "max_far_bps",
+            "type": "u32"
+          },
+          {
+            "name": "zoning",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VerdictRecorded",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bbl",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          },
+          {
+            "name": "source",
+            "type": "u8"
+          },
+          {
+            "name": "confidence_bps",
+            "type": "u16"
+          },
+          {
+            "name": "flags",
+            "type": "u32"
+          },
+          {
+            "name": "unused_sqft",
+            "type": "u64"
+          },
+          {
+            "name": "est_value_usd",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ParcelMinted",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bbl",
+            "type": "string"
+          },
+          {
+            "name": "asset",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ParcelListed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bbl",
+            "type": "string"
+          },
+          {
+            "name": "asset",
+            "type": "pubkey"
+          },
+          {
+            "name": "seller",
+            "type": "pubkey"
+          },
+          {
+            "name": "price_usd_cents",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ListingCancelled",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bbl",
+            "type": "string"
+          },
+          {
+            "name": "asset",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ParcelSold",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bbl",
+            "type": "string"
+          },
+          {
+            "name": "asset",
+            "type": "pubkey"
+          },
+          {
+            "name": "buyer",
+            "type": "pubkey"
+          },
+          {
+            "name": "seller",
+            "type": "pubkey"
+          },
+          {
+            "name": "price_usd_cents",
+            "type": "u64"
+          },
+          {
+            "name": "lamports_paid",
+            "type": "u64"
+          },
+          {
+            "name": "sol_usd_price_e8",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ]
+}

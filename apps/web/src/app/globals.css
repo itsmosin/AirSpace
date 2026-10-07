@@ -1,0 +1,153 @@
+@import "tailwindcss";
+@import "@solana/wallet-adapter-react-ui/styles.css";
+
+:root {
+  --bg: #07090f;
+  --bg-elevated: #0b0f19;
+  --fg: #e6e9f2;
+  --fg-muted: #8b93a7;
+  --fg-faint: #5b6378;
+  --cyan: #22d3ee;
+  --violet: #8b5cf6;
+  --amber: #f59e0b;
+  --rose: #fb7185;
+  --emerald: #34d399;
+  --line: rgba(255, 255, 255, 0.1);
+  --glass: rgba(255, 255, 255, 0.05);
+  --radius: 16px;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
+  --color-cyan: var(--cyan);
+  --color-violet: var(--violet);
+  --color-amber: var(--amber);
+  --color-rose: var(--rose);
+  --color-emerald: var(--emerald);
+  --color-line: var(--line);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
+  --animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--cyan) 35%, transparent);
+}
+
+/* Ambient background glows */
+.bg-ambient {
+  background-image:
+    radial-gradient(900px 500px at 15% -10%, color-mix(in oklab, var(--cyan) 14%, transparent), transparent 60%),
+    radial-gradient(800px 500px at 90% 10%, color-mix(in oklab, var(--violet) 16%, transparent), transparent 60%),
+    radial-gradient(700px 400px at 50% 110%, color-mix(in oklab, var(--cyan) 8%, transparent), transparent 60%);
+}
+
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.glass-strong {
+  background: rgba(11, 15, 25, 0.78);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, #ffffff 0%, #c7f6ff 45%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ring-glow-cyan {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--cyan) 40%, transparent), 0 0 40px -10px color-mix(in oklab, var(--cyan) 60%, transparent);
+}
+.ring-glow-violet {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--violet) 40%, transparent), 0 0 40px -10px color-mix(in oklab, var(--violet) 60%, transparent);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.04) 100%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+  border-radius: 8px;
+}
+
+.grid-fade {
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.12) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 8px; }
+
+/* Mapbox overrides */
+.mapboxgl-ctrl-logo, .mapboxgl-ctrl-attrib { opacity: 0.35; }
+.mapboxgl-popup-content {
+  background: rgba(11, 15, 25, 0.92) !important;
+  color: var(--fg) !important;
+  border: 1px solid var(--line);
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  box-shadow: 0 20px 50px -20px rgba(0,0,0,0.8) !important;
+  font-family: var(--font-sans);
+}
+.mapboxgl-popup-tip { border-top-color: rgba(11, 15, 25, 0.92) !important; border-bottom-color: rgba(11, 15, 25, 0.92) !important; }
+.mapboxgl-popup-close-button { color: var(--fg-muted) !important; font-size: 18px; right: 6px; top: 4px; }
+.mapboxgl-popup-close-button:hover { background: transparent !important; color: var(--fg) !important; }
+
+/* Wallet adapter modal restyle */
+.wallet-adapter-modal-wrapper {
+  background: #0b0f19 !important;
+  border: 1px solid var(--line);
+  border-radius: 20px !important;
+  font-family: var(--font-sans) !important;
+}
+.wallet-adapter-modal-title { color: var(--fg) !important; font-weight: 600 !important; letter-spacing: -0.02em; }
+.wallet-adapter-modal-list .wallet-adapter-button { font-family: var(--font-sans) !important; border-radius: 12px !important; }
+.wallet-adapter-modal-list .wallet-adapter-button:hover { background: rgba(255,255,255,0.06) !important; }
+.wallet-adapter-modal-overlay { background: rgba(7, 9, 15, 0.75) !important; backdrop-filter: blur(6px); }
+.wallet-adapter-modal-button-close { background: rgba(255,255,255,0.06) !important; }
+.wallet-adapter-modal-list-more { color: var(--fg-muted) !important; }
