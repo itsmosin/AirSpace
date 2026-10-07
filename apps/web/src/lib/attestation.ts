@@ -14,15 +14,18 @@ export type AttestationInfo = {
 };
 
 export function parseAttestation(pda: PublicKey, raw: Uint8Array): AttestationInfo {
-  const buf = Buffer.from(raw);
-  const nonce = new PublicKey(buf.subarray(1, 33));
-  const credential = new PublicKey(buf.subarray(33, 65));
-  const schema = new PublicKey(buf.subarray(65, 97));
-  const len = buf.readUInt32LE(97);
-  const data = buf.subarray(101, 101 + len);
+  // DataView-based parsing: identical in Node, serverless and browser bundles (no Buffer polyfill needed).
+  const bytes = raw instanceof Uint8Array ? raw : new Uint8Array(raw as ArrayBufferLike);
+  const dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  if (bytes.length < 101 + 32 + 8) throw new Error("Attestation account too small");
+  const nonce = new PublicKey(bytes.subarray(1, 33));
+  const credential = new PublicKey(bytes.subarray(33, 65));
+  const schema = new PublicKey(bytes.subarray(65, 97));
+  const len = dv.getUint32(97, true);
+  const data = bytes.subarray(101, 101 + len);
   let o = 101 + len;
-  const signer = new PublicKey(buf.subarray(o, o + 32)); o += 32;
-  const expiry = Number(buf.readBigInt64LE(o));
+  const signer = new PublicKey(bytes.subarray(o, o + 32)); o += 32;
+  const expiry = Number(dv.getBigInt64(o, true));
   const now = Math.floor(Date.now() / 1000);
   return {
     pda: pda.toBase58(), nonce: nonce.toBase58(), credential: credential.toBase58(), schema: schema.toBase58(),

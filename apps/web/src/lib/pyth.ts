@@ -21,20 +21,24 @@ export type PriceUpdate = {
 };
 
 export function parsePriceUpdateV2(raw: Uint8Array): PriceUpdate {
-  const buf = Buffer.from(raw);
-  if (buf.length < 41 + 32 + 8 + 8 + 4 + 8 + 8 + 8 + 8 + 8) throw new Error("Price account too small");
+  // DataView-based parsing: works identically in Node, serverless and browser bundles (no Buffer polyfill needed).
+  const bytes = raw instanceof Uint8Array ? raw : new Uint8Array(raw as ArrayBufferLike);
+  const dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  if (bytes.length < 41 + 32 + 8 + 8 + 4 + 8 + 8 + 8 + 8 + 8) throw new Error("Price account too small");
   // [0..8] discriminator, [8..40] write_authority, [40] verification level tag
-  const tag = buf[40];
+  const tag = bytes[40];
   let o = tag === 0 ? 42 : 41; // Partial carries num_signatures u8 at [41]
-  const feedId = "0x" + buf.subarray(o, o + 32).toString("hex"); o += 32;
-  const price = buf.readBigInt64LE(o); o += 8;
-  const conf = buf.readBigUInt64LE(o); o += 8;
-  const exponent = buf.readInt32LE(o); o += 4;
-  const publishTime = Number(buf.readBigInt64LE(o)); o += 8;
-  const prevPublishTime = Number(buf.readBigInt64LE(o)); o += 8;
-  const emaPrice = buf.readBigInt64LE(o); o += 8;
-  const emaConf = buf.readBigUInt64LE(o); o += 8;
-  const postedSlot = buf.readBigUInt64LE(o);
+  let feedId = "0x";
+  for (let i = 0; i < 32; i++) feedId += bytes[o + i].toString(16).padStart(2, "0");
+  o += 32;
+  const price = dv.getBigInt64(o, true); o += 8;
+  const conf = dv.getBigUint64(o, true); o += 8;
+  const exponent = dv.getInt32(o, true); o += 4;
+  const publishTime = Number(dv.getBigInt64(o, true)); o += 8;
+  const prevPublishTime = Number(dv.getBigInt64(o, true)); o += 8;
+  const emaPrice = dv.getBigInt64(o, true); o += 8;
+  const emaConf = dv.getBigUint64(o, true); o += 8;
+  const postedSlot = dv.getBigUint64(o, true);
   return {
     feedId, price, conf, exponent, publishTime, prevPublishTime, emaPrice, emaConf, postedSlot,
     verificationLevel: tag === 0 ? "partial" : "full",
