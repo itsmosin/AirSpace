@@ -47,9 +47,6 @@ export function Hero() {
         <motion.div {...fade(0)}>
           <Glyph className="size-10" />
         </motion.div>
-        <motion.p {...fade(1)} className="mt-6 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3.5 py-1.5 text-[13px] font-medium text-fg shadow-card">
-          <span className="size-2 rounded-full bg-green" /> Live on Solana devnet
-        </motion.p>
         <motion.h1 {...fade(2)} className="display mt-6 text-[40px] font-semibold leading-[1.02] text-fg sm:text-[56px] md:text-[72px] lg:text-[84px]">
           Trade the <span className="text-rainbow">sky</span>
           <br />
