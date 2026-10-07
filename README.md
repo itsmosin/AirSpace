@@ -21,6 +21,10 @@ owner enters address ─► Chainlink CRE workflow ─► Solana program ─► 
 
 Every rule lives in the program. The web app only builds transactions.
 
+## Live
+
+**https://airspace-nyc.vercel.app** (Solana devnet). Verification requests made on the site are queued on-chain and picked up by the Chainlink CRE verifier sweep (`scripts/verifier-loop.sh`), which audits each lot and writes the DON-signed verdict to the program; the page updates itself when the verdict lands, usually within a minute.
+
 ## Devnet deployment
 
 | | |
@@ -84,9 +88,17 @@ Buy a listed parcel end to end with a fresh KYC'd wallet:
 bun run --cwd scripts buy-test.ts --bbl 1007150059
 ```
 
+### Hosting
+
+The site and every API route run on Vercel (`apps/web/vercel.json`, root directory `apps/web`, secrets via `REGISTRAR_KEYPAIR_JSON` and `SAS_CONFIG_JSON`, `VERIFIER_MODE=queue`). The one thing that cannot run in a serverless function is the Chainlink CRE CLI, so verification is split: the site opens the verdict account on-chain and queues the lot, and a machine with the CRE CLI runs the sweep:
+
+```bash
+scripts/verifier-loop.sh 60 hosted-settings   # polls /api/verify/pending every 60 s
+```
+
 ### Judge walkthrough (about two minutes)
 
-1. Open http://localhost:3000/explore. Five Manhattan lots are minted; two are listed at demo prices so faucet SOL is enough.
+1. Open https://airspace-nyc.vercel.app/explore (or http://localhost:3000/explore when running locally). Five Manhattan lots are minted; two are listed at demo prices so faucet SOL is enough.
 2. Connect Phantom on devnet. Open a listed parcel and press **Verify identity**. The registrar issues a KYC attestation to your wallet.
 3. Press **Buy**. The quote is computed from the Pyth SOL/USD feed. One transaction pays the seller and transfers the Core asset. The explorer link appears when it confirms.
 4. Try **List air rights** with the address `405 West 59th Street`: the wizard fetches the PLUTO record, requests a Chainlink verification, streams the CRE log, and lets you mint once the on-chain verdict is Allow. Try `350 Fifth Avenue` to watch the Empire State Building get denied: it is fully built out, so it has no rights to sell.

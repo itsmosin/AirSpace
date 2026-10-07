@@ -367,7 +367,21 @@ function VerifyStep({ state, patch }: { state: WizardState; patch: (p: Partial<W
 
       {state.verify || job ? (
         <div className="mt-6 space-y-4">
-          <Terminal text={job?.log ?? ""} live={running} title={`cre workflow simulate · ${lot.bbl}${job ? ` · ${job.status}` : ""}`} />
+          <Terminal
+            text={
+              job?.log ||
+              (running
+                ? [
+                    `verdict account opened on devnet for BBL ${lot.bbl}`,
+                    "queued for the Chainlink CRE verifier sweep (polls every 60 s)",
+                    "the workflow fetches the NYC PLUTO record, audits it inside a TEE, and signs a VerdictReport",
+                    "this page refreshes automatically when the verdict lands",
+                  ].join("\n")
+                : "")
+            }
+            live={running}
+            title={`cre workflow simulate · ${lot.bbl}${job ? ` · ${job.status}` : running ? " · queued" : ""}`}
+          />
           {job?.txSignature ? (
             <p className="text-xs text-fg-muted">Report tx <Mono value={job.txSignature} href={explorerTx(job.txSignature)} chars={8} className="text-xs" /></p>
           ) : null}
