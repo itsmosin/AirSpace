@@ -79,15 +79,35 @@ export function normalizeStreetQuery(address: string) {
     .toUpperCase();
 }
 
+const BOROUGH_RANK: Record<string, number> = { MN: 0, BK: 1, QN: 2, BX: 3, SI: 4 };
+
 export async function plutoByAddressText(address: string): Promise<PlutoLot | null> {
   const q = normalizeStreetQuery(address);
   if (!q) return null;
+  const houseNo = q.split(" ")[0];
+  const street = q.slice(houseNo.length).trim();
+  const byBorough = (a: PlutoLot, b: PlutoLot) => (BOROUGH_RANK[a.borough] ?? 9) - (BOROUGH_RANK[b.borough] ?? 9);
+  // 1) exact house number + street prefix, e.g. "350 5 AVENUE"
+  if (/^\d+$/.test(houseNo) && street) {
+    const safe = q.replace(/'/g, "''");
+    const rows = await socrata({ $where: `upper(address) like '${safe}%'`, $select: PLUTO_SELECT, $limit: "20" });
+    const lots = rows.map(normalizePluto).sort(byBorough);
+    if (lots[0]) return lots[0];
+    // 2) same street, nearest house number (PLUTO addresses are ranges like "338 5 AVENUE")
+    const streetRows = await socrata({ $where: `upper(address) like '% ${street.replace(/'/g, "''")}'`, $select: PLUTO_SELECT, $limit: "400" });
+    const target = Number(houseNo);
+    const candidates = streetRows.map(normalizePluto).filter((l) => /^\d+/.test(l.address));
+    candidates.sort((a, b) => {
+      const da = Math.abs(parseInt(a.address, 10) - target), db = Math.abs(parseInt(b.address, 10) - target);
+      return da - db || byBorough(a, b);
+    });
+    if (candidates[0] && Math.abs(parseInt(candidates[0].address, 10) - target) <= 40) return candidates[0];
+  }
+  // 3) full-text search as a last resort
   const rows = await socrata({ $q: q, $select: PLUTO_SELECT, $limit: "10" });
   if (rows.length === 0) return null;
-  const lots = rows.map(normalizePluto);
-  const houseNo = q.split(" ")[0];
-  const exact = lots.find((l) => l.address.toUpperCase().startsWith(houseNo + " "));
-  return exact ?? lots[0];
+  const lots = rows.map(normalizePluto).sort(byBorough);
+  return lots.find((l) => l.address.toUpperCase().startsWith(houseNo + " ")) ?? lots[0];
 }
 
 export async function plutoByAddress(address: string): Promise<{ lot: PlutoLot | null; geocode: Geocode | null; method: "mapbox" | "pluto-text" }> {

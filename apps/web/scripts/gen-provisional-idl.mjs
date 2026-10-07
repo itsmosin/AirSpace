@@ -68,8 +68,14 @@ const instructions = [
       acc('payer', { writable: true, signer: true }),
       acc('verdict', { writable: true, pda: pda([seedConst('verdict'), seedArg('bbl')]) }),
       acc('system_program', { address: SYSTEM }),
+      acc('parcel', { pda: pda([seedConst('parcel'), seedArg('bbl')]) }),
     ],
     args: [{ name: 'bbl', type: 'string' }],
+  },
+  {
+    name: 'set_forwarder',
+    accounts: [acc('admin', { signer: true }), acc('registry', { writable: true, pda: registryPda })],
+    args: [{ name: 'forwarder_program', type: 'pubkey' }],
   },
   {
     name: 'on_report',
@@ -80,7 +86,7 @@ const instructions = [
       acc('verdict', { writable: true }),
     ],
     args: [
-      { name: 'metadata', type: 'bytes' },
+      { name: '_metadata', type: 'bytes' },
       { name: 'report', type: 'bytes' },
     ],
   },
@@ -215,7 +221,7 @@ const types = [
     name: 'ParcelSold',
     type: struct([
       f('bbl', 'string'), f('asset', 'pubkey'), f('buyer', 'pubkey'), f('seller', 'pubkey'), f('price_usd_cents', 'u64'),
-      f('lamports_paid', 'u64'), f('sol_usd_price_e8', 'i64'),
+      f('lamports_paid', 'u64'), f('sol_usd_price_e8', 'u64'),
     ]),
   },
 ];

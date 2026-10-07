@@ -3,7 +3,7 @@ import path from "node:path";
 import { DEVNET_RPC } from "@airspace/shared";
 
 const cwd = () => process.cwd();
-const resolveFrom = (p: string | undefined, fallback: string) => path.resolve(cwd(), p && p.trim() ? p : fallback);
+const resolveFrom = (p: string | undefined, fallback: string) => path.resolve(/* turbopackIgnore: true */ cwd(), p && p.trim() ? p : fallback);
 
 export const SERVER_ENV = {
   get rpcUrl() {

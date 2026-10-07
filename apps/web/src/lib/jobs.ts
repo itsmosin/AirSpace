@@ -8,19 +8,20 @@ type Store = { jobs: Record<string, VerifyJob> };
 
 function paths() {
   const dir = SERVER_ENV.dataDir;
-  return { dir, logs: path.join(dir, "logs"), file: path.join(dir, "jobs.json") };
+  return { dir, logs: path.join(dir, "logs"), payloads: path.join(dir, "payloads"), file: path.join(dir, "jobs.json") };
 }
 
 function ensureDirs() {
   const p = paths();
   fs.mkdirSync(p.logs, { recursive: true });
+  fs.mkdirSync(p.payloads, { recursive: true });
   return p;
 }
 
 function readStore(): Store {
   const p = ensureDirs();
   try {
-    const raw = fs.readFileSync(p.file, "utf8");
+    const raw = fs.readFileSync(/* turbopackIgnore: true */ p.file, "utf8");
     const parsed = JSON.parse(raw) as Store;
     return parsed && typeof parsed === "object" && parsed.jobs ? parsed : { jobs: {} };
   } catch {
@@ -79,6 +80,10 @@ export function listJobs(limit = 50): VerifyJob[] {
 
 export function logPath(jobId: string) {
   return path.join(ensureDirs().logs, `${jobId}.log`);
+}
+
+export function payloadPath(jobId: string) {
+  return path.join(ensureDirs().payloads, `${jobId}.json`);
 }
 
 export function appendLog(jobId: string, line: string) {

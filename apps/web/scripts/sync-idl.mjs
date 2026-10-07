@@ -1,11 +1,13 @@
-// Copies the real Anchor IDL (packages/shared/idl/airspace.json) into src/idl/airspace.json when it exists,
-// otherwise falls back to the provisional IDL. Runs before `dev` and `build`.
+// Copies the real Anchor IDL into src/idl/airspace.json: prefers packages/shared/idl/airspace.json, then
+// programs/airspace/target/idl/airspace.json, otherwise falls back to the provisional IDL. Runs before `dev` and `build`.
 import { copyFileSync, existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const shared = resolve(here, '..', '..', '..', 'packages', 'shared', 'idl', 'airspace.json');
+const repo = resolve(here, '..', '..', '..');
+const shared = resolve(repo, 'packages', 'shared', 'idl', 'airspace.json');
+const anchorTarget = resolve(repo, 'programs', 'airspace', 'target', 'idl', 'airspace.json');
 const provisional = join(here, '..', 'src', 'idl', 'airspace.provisional.json');
 const target = join(here, '..', 'src', 'idl', 'airspace.json');
 
@@ -19,6 +21,7 @@ function usable(path) {
   }
 }
 
-const source = usable(shared) ? shared : provisional;
+const source = usable(shared) ? shared : usable(anchorTarget) ? anchorTarget : provisional;
 copyFileSync(source, target);
-console.log(`[idl] using ${source === shared ? 'shared Anchor IDL' : 'provisional IDL'} -> src/idl/airspace.json`);
+const label = source === shared ? 'shared Anchor IDL (packages/shared/idl)' : source === anchorTarget ? 'Anchor IDL (programs/airspace/target/idl)' : 'provisional IDL';
+console.log(`[idl] using ${label} -> src/idl/airspace.json`);

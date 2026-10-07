@@ -63,7 +63,17 @@ export function createCollectionIx(program: AirspaceProgram, p: { admin: PublicK
 export function openVerdictIx(program: AirspaceProgram, p: { payer: PublicKey; bbl: string }) {
   return methods(program)
     .openVerdict(p.bbl)
-    .accountsPartial({ payer: p.payer, verdict: verdictPda(p.bbl, program.programId), systemProgram: SystemProgram.programId });
+    .accountsPartial({
+      payer: p.payer,
+      verdict: verdictPda(p.bbl, program.programId),
+      systemProgram: SystemProgram.programId,
+      // Parcel PDA for the BBL; only its existence is inspected (VerdictLocked guard).
+      parcel: parcelPda(p.bbl, program.programId),
+    });
+}
+
+export function setForwarderIx(program: AirspaceProgram, p: { admin: PublicKey; forwarderProgram: PublicKey }) {
+  return methods(program).setForwarder(p.forwarderProgram).accountsPartial({ admin: p.admin, registry: registryPda(program.programId) });
 }
 
 export function onReportIx(

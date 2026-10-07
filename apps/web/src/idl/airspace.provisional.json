@@ -231,6 +231,28 @@
         {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "parcel",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  97,
+                  114,
+                  99,
+                  101,
+                  108
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "bbl"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -248,6 +270,52 @@
         39,
         240,
         218
+      ]
+    },
+    {
+      "name": "set_forwarder",
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "forwarder_program",
+          "type": "pubkey"
+        }
+      ],
+      "discriminator": [
+        95,
+        60,
+        153,
+        138,
+        227,
+        50,
+        50,
+        14
       ]
     },
     {
@@ -287,7 +355,7 @@
       ],
       "args": [
         {
-          "name": "metadata",
+          "name": "_metadata",
           "type": "bytes"
         },
         {
@@ -1396,7 +1464,7 @@
           },
           {
             "name": "sol_usd_price_e8",
-            "type": "i64"
+            "type": "u64"
           }
         ]
       }

@@ -108,6 +108,9 @@ export type VerifyJob = {
   openVerdictTx?: string;
   txSignature?: string;
   explorerUrl?: string;
+  /** Parsed from the CRE log line `Verdict <bbl>: status=<n> ...` */
+  verdictLine?: string;
+  verdictStatus?: number;
   error?: string;
   exitCode?: number | null;
 };
