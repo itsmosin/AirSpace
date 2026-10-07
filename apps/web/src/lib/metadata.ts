@@ -52,7 +52,7 @@ export function buildMetadata(src: MetadataSource, origin: string): CoreMetadata
   return {
     name: assetName(src.address),
     symbol: "AIR",
-    description: `${src.unusedSqft.toLocaleString("en-US")} sq ft of unused development rights above ${src.address}, ${BOROUGH_NAME[src.borough]} (BBL ${src.bbl}). Verified by ${src.verifiedBy} and settled on Solana.`,
+    description: `${src.unusedSqft.toLocaleString("en-US")} sq ft of unused development rights above ${src.address}, ${BOROUGH_NAME[src.borough]} (BBL ${src.bbl}). ${src.verifiedBy === "Unverified" ? "Not yet verified." : `Verified by ${src.verifiedBy} and settled on Solana.`}`,
     image,
     external_url: `${origin}/parcel/${src.bbl}`,
     attributes: [
