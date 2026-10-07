@@ -4,10 +4,12 @@ import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { mplCore, fetchAsset, fetchAssetsByOwner, type AssetV1 } from "@metaplex-foundation/mpl-core";
 import { publicKey as umiPublicKey } from "@metaplex-foundation/umi";
 import { PUBLIC_ENV } from "@/lib/env";
+import { Connection } from "@solana/web3.js";
+import { createThrottledFetch } from "@/lib/rpcFetch";
 
 let umi: ReturnType<typeof createUmi> | null = null;
 export function getUmi() {
-  if (!umi) umi = createUmi(PUBLIC_ENV.rpcUrl).use(mplCore());
+  if (!umi) umi = createUmi(new Connection(PUBLIC_ENV.rpcUrl, { commitment: "confirmed", fetch: createThrottledFetch(6) })).use(mplCore());
   return umi;
 }
 
