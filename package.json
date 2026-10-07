@@ -5,6 +5,6 @@
   "scripts": {
     "web": "bun run --cwd apps/web dev",
     "program:build": "cd programs/airspace && anchor build && cp target/idl/airspace.json ../../packages/shared/idl/airspace.json",
-    "cre:simulate": "cd cre && cre workflow simulate ./airspace-verifier --target staging-settings --non-interactive --trigger-index 0 --http-payload @./payloads/esb.json"
+    "cre:simulate": "cd cre && cre workflow simulate ./airspace-verifier --target staging-settings --non-interactive --trigger-index 0 --http-payload ./payloads/west59.json"
   }
 }

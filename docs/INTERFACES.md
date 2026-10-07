@@ -196,7 +196,7 @@ Require `owner == PYTH_RECEIVER`, `feed_id == SOL_USD_FEED`, `price > 0`, `now -
 - Pipeline per bbl: HTTP GET PLUTO → compute (§4) → LLM audit (Anthropic Messages API, model `claude-sonnet-5`, secret id `ANTHROPIC_API_KEY`, structured JSON `{ "recommendation": "allow|deny|review", "confidence": 0..1, "flags": { "dataMismatch": bool, "ownerMismatch": bool }, "valueAdjustmentPct": -20..20, "reasoning": string }`) → sha256 → `VerdictReport` → Solana write (§2) → return `{ bbl, status, confidenceBps, flags, unusedSqft, estValueUsd, txSignature, explorerUrl }`.
 - LLM call runs confidentially: prefer `cre.handlerInTee` + `TeeRuntime` HTTPClient (then `usingTheDons()` for report + write); fall back to `ConfidentialHTTPClient` in a plain handler if TEE + HTTP trigger does not simulate.
 - `cre/mock-llm/server.js` replicates the Anthropic response shape for offline runs (`config.llmUrl` switches).
-- Simulate: `cd cre && cre workflow simulate ./airspace-verifier --target staging-settings --non-interactive --trigger-index 0 --http-payload @./payloads/esb.json [--broadcast]`.
+- Simulate: `cd cre && cre workflow simulate ./airspace-verifier --target staging-settings --non-interactive --trigger-index 0 --http-payload ./payloads/west59.json [--broadcast]`.
 
 ## 9. Web ↔ chain ↔ CRE API (Next.js route handlers, `apps/web`)
 | Route | Method | Body / Query | Returns |
