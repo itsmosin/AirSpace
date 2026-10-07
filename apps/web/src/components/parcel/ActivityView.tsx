@@ -35,7 +35,27 @@ export function ActivityView() {
   const fetcher = useCallback(async (): Promise<Row[]> => {
     const sigs = await connection.getSignaturesForAddress(PROGRAM_ID, { limit: 30 }, "confirmed");
     if (sigs.length === 0) return [];
-    const txs = await connection.getTransactions(sigs.map((s) => s.signature), { maxSupportedTransactionVersion: 0, commitment: "confirmed" });
+    // Fetch in small chunks with spacing and backoff: public and free-tier RPCs cap requests per second,
+    // and a batch call is billed per transaction.
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const txs: Awaited<ReturnType<typeof connection.getTransactions>> = [];
+    const CHUNK = 8;
+    for (let i = 0; i < sigs.length; i += CHUNK) {
+      const chunk = sigs.slice(i, i + CHUNK).map((s) => s.signature);
+      let attempt = 0;
+      for (;;) {
+        try {
+          txs.push(...(await connection.getTransactions(chunk, { maxSupportedTransactionVersion: 0, commitment: "confirmed" })));
+          break;
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : String(e);
+          if (!/limit|429|Too Many/i.test(msg) || attempt >= 4) throw e;
+          attempt += 1;
+          await sleep(600 * 2 ** attempt);
+        }
+      }
+      if (i + CHUNK < sigs.length) await sleep(700);
+    }
     return sigs.map((s, i) => {
       const tx = txs[i];
       const logs = tx?.meta?.logMessages ?? [];
