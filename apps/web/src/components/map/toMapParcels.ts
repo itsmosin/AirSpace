@@ -14,6 +14,8 @@ export function toMapParcels(parcels: ParcelRecord[], pending: PendingRecord[] =
     estValueUsd: p.estValueUsd,
     state: p.listing ? "listed" : "verified",
     priceUsd: p.listing ? p.listing.priceUsdCents / 100 : undefined,
+    maxFar: p.maxFar,
+    owner: p.owner,
   }));
   const seen = new Set(minted.map((m) => m.bbl));
   const extra: MapParcel[] = pending

@@ -11,6 +11,8 @@ export type MapParcel = {
   estValueUsd: number;
   state: MapParcelState;
   priceUsd?: number;
+  maxFar?: number;
+  owner?: string;
 };
 
 export type MapView = { lng: number; lat: number; zoom: number; pitch: number; bearing: number };
