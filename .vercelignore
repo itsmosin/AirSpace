@@ -1,0 +1,18 @@
+# Only the web app and its workspace packages are needed for the Vercel build.
+programs/
+keys/
+docs/
+.git/
+**/node_modules/
+**/.next/
+**/target/
+**/.anchor/
+**/test-ledger/
+**/.data/
+**/.env
+**/.env.*
+!**/.env.example
+*.log
+.DS_Store
+cre/runs/
+cre/**/payloads/*.tmp
