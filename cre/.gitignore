@@ -7,3 +7,5 @@ dist/
 *.log
 .data/
 bun.lock
+.cre_build_tmp.js
+*.tsbuildinfo
