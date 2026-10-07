@@ -1,5 +1,5 @@
 {
-  "webBaseUrl": "http://localhost:3000",
+  "webBaseUrl": "http://127.0.0.1:8787",
   "llmUrl": "http://127.0.0.1:8787/v1/messages",
   "llmModel": "claude-sonnet-5",
   "llmSecretId": "ANTHROPIC_API_KEY",

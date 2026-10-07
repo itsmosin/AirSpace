@@ -6,7 +6,7 @@
   "main": "main.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "simulate:http": "cd .. && cre workflow simulate ./airspace-verifier --target staging-settings --non-interactive --trigger-index 0 --http-payload @./payloads/esb.json",
+    "simulate:http": "cd .. && cre workflow simulate ./airspace-verifier --target staging-settings --non-interactive --trigger-index 0 --http-payload ./payloads/esb.json",
     "simulate:cron": "cd .. && cre workflow simulate ./airspace-verifier --target staging-settings --non-interactive --trigger-index 1"
   },
   "dependencies": {
