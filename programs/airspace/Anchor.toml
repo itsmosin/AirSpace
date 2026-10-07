@@ -38,3 +38,8 @@ address = "rec5EKMGg6MxZYaMdyBfgwp4d5rB9T1VQH5pJv5LtFJ"
 
 [[test.validator.clone]]
 address = "7UVimffxr9ow1uXYxsr4LHAcV58mLzhmwaeKvJ1pjLiE"
+
+# Chainlink keystone forwarder state (devnet) so on_report can be exercised against
+# a state account with the real forwarder owner.
+[[test.validator.clone]]
+address = "8QoomCQyPSkJ8WopJbX9B4HyvrFzziwvJdU8hZE6DCr9"

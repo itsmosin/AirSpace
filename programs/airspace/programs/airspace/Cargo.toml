@@ -21,7 +21,11 @@ custom-panic = []
 
 [dependencies]
 anchor-lang = { version = "=0.32.1", features = ["init-if-needed"] }
-mpl-core = { version = "0.12.1", features = ["anchor-0-32"] }
+mpl-core = { version = "0.12.1", default-features = false, features = ["anchor-0-32"] }
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
+
+# The dependency graph needs rustc >= 1.89; platform-tools v1.52 ships Rust 1.89.
+[package.metadata.solana]
+tools-version = "v1.52"
