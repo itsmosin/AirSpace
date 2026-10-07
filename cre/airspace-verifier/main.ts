@@ -106,13 +106,18 @@ type LlmAudit = {
 
 const SYSTEM_PROMPT =
 	'You audit NYC air-rights (unused floor-area / TDR) listings for a marketplace. ' +
-	'You receive the official PLUTO record for a tax lot, the figures the owner submitted, and the computed unused floor area. ' +
-	'Check that the submitted numbers are consistent with PLUTO (a difference over 10% is a data mismatch), ' +
-	'whether the submitted owner name clearly differs from the PLUTO owner, and whether the unused floor area is credible and transferable. ' +
+	'You receive the official PLUTO record for a tax lot, the computed unused floor area, and optionally the figures the owner submitted. ' +
+	'Rules: ' +
+	'(1) The PLUTO record is the source of truth. Your confidence measures how well the computed unused floor area is supported by that record, NOT whether a submission was provided. ' +
+	'(2) If "submitted" is empty or missing, there is nothing to compare: do not lower confidence for that, do not flag a mismatch, and do not ask for more information. ' +
+	'(3) Only set dataMismatch when a submitted area differs from PLUTO by more than 10%; only set ownerMismatch when a submitted owner name clearly names a different party (abbreviations, punctuation and suffixes like LLC/L.L.C. are the same party). ' +
+	'(4) A complete PLUTO record with positive unused floor area and no mismatch is an "allow" with confidence between 0.85 and 0.97. Landmark, historic-district or special-district status is a warning, not a reason to deny or review. ' +
+	'(5) Use "review" only for an incomplete or contradictory PLUTO record, and "deny" only when unused floor area is zero or a mismatch is clear. ' +
+	'(6) valueAdjustmentPct is a small adjustment to the comparables-based estimate for location and zoning (prime Manhattan commercial districts positive, outer or restricted lots negative); keep it within -10..10 unless something is unusual. ' +
 	'Respond with ONLY a JSON object (no prose, no code fences) with exactly these keys: ' +
 	'"recommendation" ("allow" | "deny" | "review"), "confidence" (number 0..1), ' +
 	'"flags" ({"dataMismatch": boolean, "ownerMismatch": boolean}), ' +
-	'"valueAdjustmentPct" (integer -20..20, your adjustment to the comparables-based estimate), ' +
+	'"valueAdjustmentPct" (integer -20..20), ' +
 	'"reasoning" (string, at most 60 words).'
 
 const buildAuditPrompt = (lot: PlutoLot, submitted: VerifyRequest['submitted']): string => {
