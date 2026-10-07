@@ -1,0 +1,13 @@
+export const AIRSPACE_PROGRAM_ID = '5PNnqSxWCktbS7pUtt5MXCuQEVfztjYuLpvVvbB3oxeZ';
+export const REGISTRAR_PUBKEY = 'ExgRPqMrP59Zo27oFziZi2dP9RAU7BdRrazDUQreCjG8';
+export const DEPLOYER_PUBKEY = '8qxj2favgzZBpZrnUdDf17woAyfWhqrLC89bmMcRAjid';
+export const MPL_CORE_PROGRAM_ID = 'CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d';
+export const SAS_PROGRAM_ID = '22zoJMtdu4tQc2PzL74ZUT7FrwgB1Udec8DdW4yw4BdG';
+export const PYTH_RECEIVER_PROGRAM_ID = 'rec5EKMGg6MxZYaMdyBfgwp4d5rB9T1VQH5pJv5LtFJ';
+export const PYTH_SOL_USD_PRICE_ACCOUNT = '7UVimffxr9ow1uXYxsr4LHAcV58mLzhmwaeKvJ1pjLiE';
+export const PYTH_SOL_USD_FEED_ID = '0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d';
+export const KEYSTONE_FORWARDER_PROGRAM_ID = 'CXsKEJcs25TQEYU2e5jZ8QTPE3ffMLZhH6BWHrdcCCB5';
+export const KEYSTONE_FORWARDER_STATE = '8QoomCQyPSkJ8WopJbX9B4HyvrFzziwvJdU8hZE6DCr9';
+export const DEVNET_RPC = 'https://api.devnet.solana.com';
+export const PLUTO_URL = 'https://data.cityofnewyork.us/resource/64uk-42ks.json';
+export const SEEDS = { registry: 'registry', verdict: 'verdict', parcel: 'parcel', listing: 'listing', escrow: 'escrow', ownerNonce: 'owner-nonce' } as const;
