@@ -1,39 +1,64 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight, Building2 } from "lucide-react";
-import { AirMapLazy } from "@/components/map/AirMapLazy";
-import { toMapParcels } from "@/components/map/toMapParcels";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { Glyph } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
-import { useParcels } from "@/lib/hooks/useParcels";
-import { useMemo } from "react";
+import { OrbitArcs } from "@/components/ui/OrbitArcs";
+import { cn } from "@/lib/utils";
 
 const ease = [0.22, 1, 0.36, 1] as const;
+const fade = (i: number) => ({ initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.5, delay: i * 0.06, ease } });
+
+const tiles = [
+  { cls: "tile-steel", pos: "-left-12 top-10 size-[190px] lg:-left-6 lg:size-[220px]", depth: 18, delay: "0s" },
+  { cls: "tile-diagonals", pos: "-right-14 top-6 size-[170px] lg:-right-8 lg:size-[200px]", depth: -24, delay: "-3s" },
+  { cls: "tile-stripe", pos: "-left-10 bottom-6 size-[160px] lg:left-2 lg:size-[180px]", depth: -14, delay: "-5s" },
+  { cls: "tile-chevron", pos: "-right-10 bottom-2 size-[180px] lg:-right-4 lg:size-[210px]", depth: 26, delay: "-7s" },
+];
 
 export function Hero() {
-  const { data } = useParcels();
-  const parcels = useMemo(() => toMapParcels(data?.parcels ?? [], data?.pending ?? []), [data]);
-  return (
-    <section className="relative h-[100svh] min-h-[640px] w-full overflow-hidden">
-      <div className="absolute inset-0">
-        <AirMapLazy parcels={parcels} interactive={false} showPopups={false} view={{ zoom: 15.4, pitch: 62, bearing: -24 }} />
-      </div>
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-bg/80 via-bg/30 to-bg" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-bg/70 via-transparent to-transparent" />
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 60, damping: 20 });
+  const sy = useSpring(my, { stiffness: 60, damping: 20 });
 
-      <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-end px-4 pb-20 pt-28 sm:px-6 md:justify-center md:pb-0">
-        <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }} className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-fg-muted backdrop-blur">
-          <Building2 className="size-3.5 text-cyan" /> NYC air rights · Solana devnet
+  return (
+    <section
+      className="relative isolate overflow-hidden"
+      onMouseMove={(e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        mx.set((e.clientX - r.left) / r.width - 0.5);
+        my.set((e.clientY - r.top) / r.height - 0.5);
+      }}
+      onMouseLeave={() => {
+        mx.set(0);
+        my.set(0);
+      }}
+    >
+      <div className="dot-field absolute inset-0 -z-20" />
+      <OrbitArcs className="-z-10" />
+
+      {tiles.map((t) => (
+        <Tile key={t.cls} {...t} sx={sx} sy={sy} />
+      ))}
+
+      <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 pb-20 pt-20 text-center sm:px-6 md:pb-28 md:pt-28">
+        <motion.div {...fade(0)}>
+          <Glyph className="size-10" />
+        </motion.div>
+        <motion.p {...fade(1)} className="mt-6 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3.5 py-1.5 text-[13px] font-medium text-fg shadow-card">
+          <span className="size-2 rounded-full bg-green" /> Live on Solana devnet
         </motion.p>
-        <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.05, ease }} className="max-w-3xl text-[44px] font-semibold leading-[0.98] tracking-[-0.04em] sm:text-6xl md:text-7xl">
-          <span className="text-gradient">Trade the sky</span>
+        <motion.h1 {...fade(2)} className="display mt-6 text-[40px] font-semibold leading-[1.02] text-fg sm:text-[56px] md:text-[72px] lg:text-[84px]">
+          Trade the <span className="text-rainbow">sky</span>
           <br />
           above New York.
         </motion.h1>
-        <motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15, ease }} className="mt-6 max-w-xl text-base leading-relaxed text-fg-muted sm:text-lg">
+        <motion.p {...fade(3)} className="mt-6 max-w-2xl text-[17px] leading-relaxed text-fg-muted sm:text-[19px]">
           Unused development rights, verified against the city&apos;s own records by Chainlink CRE, minted as Metaplex Core assets and settled on Solana in under a second.
         </motion.p>
-        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.25, ease }} className="mt-8 flex flex-wrap items-center gap-3">
+        <motion.div {...fade(4)} className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <Button href="/explore" size="lg" iconRight={<ArrowRight className="size-4" />}>
             Explore parcels
           </Button>
@@ -42,10 +67,16 @@ export function Hero() {
           </Button>
         </motion.div>
       </div>
-
-      <div className="pointer-events-none absolute bottom-6 left-1/2 hidden -translate-x-1/2 items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-fg-faint md:flex">
-        <span className="h-px w-8 bg-white/15" /> Midtown Manhattan <span className="h-px w-8 bg-white/15" />
-      </div>
     </section>
+  );
+}
+
+function Tile({ cls, pos, depth, delay, sx, sy }: (typeof tiles)[number] & { sx: ReturnType<typeof useSpring>; sy: ReturnType<typeof useSpring> }) {
+  const x = useTransform(sx, (v) => v * depth);
+  const y = useTransform(sy, (v) => v * depth);
+  return (
+    <motion.div style={{ x, y }} className={cn("pointer-events-none absolute -z-[5] hidden md:block", pos)} aria-hidden>
+      <div className={cn("tile animate-float h-full w-full", cls)} style={{ animationDelay: delay }} />
+    </motion.div>
   );
 }
